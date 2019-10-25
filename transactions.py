@@ -11,7 +11,7 @@ def cereateConn():
 def registerBirth(fname, lname, gender, regdate, bplace, f_fname, f_lname, m_fname, m_lname):
 	conn, c = cereateConn()
 	# get the next sequential regno
-	if !(getPersonInfo("f_fname", "f_lname") or getPersonInfo("m_fname", "m_lname")):
+	if not(getPersonInfo("f_fname", "f_lname") or getPersonInfo("m_fname", "m_lname")):
 		# one of the parents don't exist - this shold prompt user to enter them
 		return False
 	c.execute("SELECT max(births.regno) from births")
@@ -33,8 +33,6 @@ def getPersonInfo(fname, lname):
 	if result == []:
 		return False
 	else: return result
-
-
 
 def main():
 	# test register births
