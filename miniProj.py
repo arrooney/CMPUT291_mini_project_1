@@ -28,6 +28,9 @@ def mainMenu():
 				break
 	return
 
+def registerBirth():
+	
+
 def passwordAuth():
 	while True:
 		userName = raw_input("Username: ")
