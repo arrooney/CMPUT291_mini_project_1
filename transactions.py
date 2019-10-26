@@ -82,7 +82,27 @@ class Database(object):
 		# close connection
 		self.conn.commit()
 		return True
+	def registerMarriage(self, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		
+		if not self.getPersonInfo(p1_fname, p1_lname) or not self.getPersonInfo(p2_fname, p2_lname):
+			# Ethier partner does not exist in this case, the user needs to give the information
+			print "One of these parents aren't registered"
+			return False
+		
+		c.execute("SELECT max(marriages.regno) from marriages")
+		result = c.fetchone()[0]
+		regno = 0 if (result == None) else int(result) + 1
+		# insert the values
+		
+		c.execute("INSERT INTO births VALUES(?, ?, ?, ?, ?, ?, ?)",\
+			(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))
+		result = c.fetchone()
 
+		# close connection
+		self.conn.commit()
+		return True
 
 	""" Add a new person to the DB """
 	def setPersonInfo(self, fname, lname, bdate, bplace, address, phone):
