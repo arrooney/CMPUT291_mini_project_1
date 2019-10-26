@@ -1,6 +1,7 @@
 import os, sys, tty, termios, time, signal, re
 from transactions import Database
-from datetime import date
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 
 
 # globals
@@ -89,7 +90,33 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
 
 def renewRegistration():
-    prettyPrint("")
+    #Input of registraion number for vehicle
+    prettyPrint("Renew a Registration")
+    print "Please supply the information...\n"
+    regno = raw_input("Registration Number of Vehicle")
+    
+    while not db.getVehicleReg(regno):
+        print "Vehicle Registration Number not found..."
+        regno = raw_input("Registration Number of Vehicle")
+    
+    vehicle = db.getVehicleReg(regno)[0]
+    
+    #getting expiry date for vehicle and todays date
+    expiry = time.strptime(vehicle[2], "%d/%m/%Y")
+    today = date.today()
+    
+    #checking if registration is expired
+    is_expired = False
+    if today >= expiry:
+        is_expired = True
+    
+    #incrementing a year onto vehicle registration if registration has expired
+    if is_expired:
+    	expiry = today + relativedelta(years=1)
+    else:
+        expiry += relativedelta(years=1)
+        
+    db.getVehicleReg()
     
 def getDate(prompt):
     
