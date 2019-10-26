@@ -88,7 +88,7 @@ class Database(object):
 		
 		if not self.getPersonInfo(p1_fname, p1_lname) or not self.getPersonInfo(p2_fname, p2_lname):
 			# Ethier partner does not exist in this case, the user needs to give the information
-			print "One of these parents aren't registered"
+			print "One of these partners aren't registered"
 			return False
 		
 		c.execute("SELECT max(marriages.regno) from marriages")
