@@ -1,9 +1,13 @@
-import sys, tty, termios, transactions
+import os, sys, tty, termios
+from transactions import Database
+from datetime import date
 users = {"arrooney" : "password", "sudo" : "1234"}
+clear = lambda: os.system('clear')
+db = Database()
 
 def mainMenu():
 	while True:
-		print "Select an action:"
+		prettyPrint("Select an action:")
 		menuSelect = raw_input("[1] Register a birth\n[2] Register a marriage\n[3] Renew a vehicle registration\n[4] Process a bill of sale\n[5] Process a payment\n[6] Get a driver abstract\n[7] Quit\n")
 		if not menuSelect.isdigit():
 			print "Please choose a number from the menu:"
@@ -12,8 +16,8 @@ def mainMenu():
 		else:
 			# input is valid, continue
 			selection = int(menuSelect)
-			# if selection == 1:
-			# 	registerBirth()
+			if selection == 1:
+				registerBirth()
 			# elif selection == 2:
 			# 	registerMarriage()
 			# elif selection == 3:
@@ -24,15 +28,62 @@ def mainMenu():
 			# 	processPayment()
 			# elif selection == 6:
 			# 	getDriverAbstract()
-			if selection == 7:
+			elif selection == 7:
 				break
 	return
 
 def registerBirth():
-	
+	prettyPrint("Register a birth")
+	print "Please supply the information...\n"
+	fname = raw_input("Baby's given name: ")
+	lname = raw_input("Baby's surname: ")
+	gender = raw_input("Gender (M/F): ")
+	while gender not in "mMfF" or len(gender) > 1:
+		gender = raw_input("Gender (M/F): ")
+	bdate = raw_input("Date of birth: ")
+	bplace = raw_input("Place of birth: ")
+	f_fname = raw_input("Father's first name: ")
+	f_lname = raw_input("Father's last name: ")
+	if not db.getPersonInfo(f_fname, f_lname):
+		print "Father not found, please enter more info..."
+		registerPerson(f_fname, f_lname)
+	m_fname = raw_input("Mother's first name: ")
+	m_lname = raw_input("Mother's last name: ")
+	motherInfo = db.getPersonInfo(m_fname, m_lname)
+	if not motherInfo:
+		print "Mother not found, please enter more info..."
+		registerPerson(f_fname, f_lname)
+	# We should have mother info now!
+	motherInfo = db.getPersonInfo(m_fname, m_lname)
+	# update the persons table:
+	registerPerson(fname, lname, bdate, bplace, motherInfo[4], motherInfo[5], motherInfo[6])
+	# update the births table:
+	regdate = date.today()
+	regplace = "Edmonton"
+	db.registerBirth(fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname)
+	prettyPrint("Success!")
+
+
+def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None, phone=None):
+	if fname == None:
+		prettyPrint("Register a person")
+		fname = raw_input("Enter first name: ")
+	if lname == None:
+		lname = raw_input("Enter last name: ")
+	if bdate == None:
+		bdate = raw_input("Date of birth: ")
+	if bplace == None:
+		bplace = raw_input("Place of birth: ")
+	if address == None:
+		address = raw_input("Address: ")
+	if phone == None:
+		phone = raw_input("Phone: ")
+	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
+
 
 def passwordAuth():
 	while True:
+		clear()
 		userName = raw_input("Username: ")
 		if userName in users.keys():
 			password = ''
@@ -49,7 +100,14 @@ def passwordAuth():
 			else:
 				print("Incorrect password")
 		else:
-			print("Incorrect username")		
+			print("Incorrect username")
+
+def prettyPrint(output):
+	clear()
+	print "====================================="
+	print "\t" + output
+	print "====================================="
+
 
 def getch():
 	# this code is based on the following stack overflow posting
@@ -66,6 +124,7 @@ def getch():
 def main():
 	passwordAuth()
 	mainMenu()
+	db.close()
 	return
 
 if __name__ == "__main__":
