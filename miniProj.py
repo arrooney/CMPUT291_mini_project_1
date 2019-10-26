@@ -1,4 +1,4 @@
-import os, sys, tty, termios, time, signal
+import os, sys, tty, termios, time, signal, re
 from transactions import Database
 from datetime import date
 
@@ -6,6 +6,7 @@ from datetime import date
 users = None
 db = None
 clear = lambda: os.system('clear')
+
 
 def mainMenu():
 	while True:
@@ -36,15 +37,16 @@ def mainMenu():
 				break
 	return
 
+
 def registerBirth():
 	prettyPrint("Register a birth")
 	print "Please supply the information...\n"
 	fname = raw_input("Baby's given name: ")
 	lname = raw_input("Baby's surname: ")
 	gender = raw_input("Gender (M/F): ")
-	while gender not in "mMfF" or len(gender) > 1:
+	while gender not in "mMfF" or len(gender) != 1:
 		gender = raw_input("Gender (M/F): ")
-	bdate = raw_input("Date of birth: ")
+	bdate = getDate("Date of birth (yyyy-mm-dd): ")
 	bplace = raw_input("Place of birth: ")
 	f_fname = raw_input("Father's first name: ")
 	f_lname = raw_input("Father's last name: ")
@@ -76,7 +78,7 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 	if lname == None:
 		lname = raw_input("Enter last name: ")
 	if bdate == None:
-		bdate = raw_input("Date of birth: ")
+		bdate = getDate("Date of birth: ")
 	if bplace == None:
 		bplace = raw_input("Place of birth: ")
 	if address == None:
@@ -84,6 +86,13 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 	if phone == None:
 		phone = raw_input("Phone: ")
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
+
+
+def getDate(prompt):
+	bdate = raw_input(prompt)
+	while not re.search("^[0-9]{4,}-[0-9]{2,}-[0-9]{2,}$", bdate):
+		bdate = raw_input(prompt)
+	return bdate
 
 
 def passwordAuth():

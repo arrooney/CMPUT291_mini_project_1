@@ -101,7 +101,7 @@ class Database(object):
 	def getPersonInfo(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT * FROM persons WHERE fname=? AND lname=?", (fname, lname))
+		c.execute("SELECT * FROM persons WHERE fname=? COLLATE NOCASE AND lname=? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 
 		if result == []:
