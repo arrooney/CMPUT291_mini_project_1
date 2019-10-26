@@ -83,7 +83,7 @@ class Database(object):
 		self.conn.commit()
 		return True
 	def registerMarriage(self, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname):
-		self.checkConn()
+    		self.checkConn()
 		c = self.conn.cursor()
 		
 		if not self.getPersonInfo(p1_fname, p1_lname) or not self.getPersonInfo(p2_fname, p2_lname):
@@ -139,29 +139,6 @@ class Database(object):
 			return False
 		else:
 			return result
-
-	def getVehicleRegByVIN(self, vin, fname, lname):
-		self.checkConn()
-		c = self.conn.cursor()
-		c.execute("SELECT * FROM registrations WHERE vin=? AND fname=? AND lname=?",\
-			(vin, fname, lname))
-		result = c.fetchall()
-
-		if result == []:
-			return False
-		else:
-			return result
-
-	def setRegistrationExpiry(self, vin, expiry):
-		self.checkConn()
-		c = self.conn.cursor()
-		try:
-			c.execute("UPDATE registrations SET expiry=? WHERE vin=?", (expiry, vin))
-			self.conn.commit()
-		except Exception as e:
-			print('Error inside setRegistrationExpiry(): ' + str(e))
-			return False
-		return True
 
 		
 """ main for testing purposes """
