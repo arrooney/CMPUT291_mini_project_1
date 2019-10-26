@@ -52,14 +52,15 @@ def registerBirth():
 	motherInfo = db.getPersonInfo(m_fname, m_lname)
 	if not motherInfo:
 		print "Mother not found, please enter more info..."
-		registerPerson(f_fname, f_lname)
+		registerPerson(m_fname, m_lname)
 	# We should have mother info now!
-	motherInfo = db.getPersonInfo(m_fname, m_lname)
-	# update the persons table:
-	registerPerson(fname, lname, bdate, bplace, motherInfo[4], motherInfo[5], motherInfo[6])
+	motherInfo = db.getPersonInfo(m_fname, m_lname)[0]
+	# update the persons table - give baby same phone and address of mother
+	if not db.getPersonInfo(fname, lname):
+		registerPerson(fname, lname, bdate, bplace, motherInfo[4], motherInfo[5])
 	# update the births table:
 	regdate = date.today()
-	regplace = "Edmonton"
+	regplace = "Edmonton" # this should actually be the place of the user
 	db.registerBirth(fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname)
 	prettyPrint("Success!")
 
