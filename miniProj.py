@@ -64,7 +64,7 @@ def registerBirth():
 		registerPerson(fname, lname, bdate, bplace, motherInfo[4], motherInfo[5])
 	# update the births table:
 	regdate = date.today()
-	regplace = "Edmonton" # this should actually be the place of the user
+	regplace = users[5] # location of user
 	db.registerBirth(fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname)
 	prettyPrint("Success!")
 
