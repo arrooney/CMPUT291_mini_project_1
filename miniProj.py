@@ -97,7 +97,7 @@ def registerMarriage():
 		bplace = raw_input("Place of birth: ")
 		registerPerson(p1_fname, p2_lname, bdate, bplace) 
 
-	# update the births table:
+	# update the marriages table:
 	regdate = date.today()
 	regplace = users[5] # location of user
 	db.registerMarriage(regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
