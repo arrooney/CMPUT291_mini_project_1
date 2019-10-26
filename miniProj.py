@@ -27,8 +27,8 @@ def mainMenu():
 				registerBirth()
 			elif selection == 2:
 				registerMarriage()
-			# elif selection == 3:
-			# 	renewRegistration()
+			elif selection == 3:
+				renewRegistration()
 			elif selection == 4:
 				processBOS()
 			# elif selection == 5:
@@ -151,7 +151,7 @@ def renewRegistration():
     vehicle = db.getVehicleReg(regno)[0]
     
     #getting expiry date for vehicle and todays date
-    expiry = time.strptime(vehicle[2], "%d/%m/%Y")
+    expiry = time.strptime(vehicle[2], "%d-%m-%Y")
     today = date.today()
     
     #checking if registration is expired
@@ -164,8 +164,9 @@ def renewRegistration():
     	expiry = today + relativedelta(years=1)
     else:
         expiry += relativedelta(years=1)
-        
-    db.getVehicleReg()
+    
+    #updating registration expiry
+    db.setRegistrationExpiry(regno, expiry)
     
 def getDate(prompt):
     

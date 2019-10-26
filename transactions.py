@@ -152,11 +152,11 @@ class Database(object):
 		else:
 			return result
 
-	def setRegistrationExpiry(self, vin, expiry):
+	def setRegistrationExpiry(self, regno, expiry):
 		self.checkConn()
 		c = self.conn.cursor()
 		try:
-			c.execute("UPDATE registrations SET expiry=? WHERE vin=?", (expiry, vin))
+			c.execute("UPDATE registrations SET expiry=? WHERE regno=?", (expiry, regno))
 			self.conn.commit()
 		except Exception as e:
 			print('Error inside setRegistrationExpiry(): ' + str(e))
