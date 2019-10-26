@@ -29,8 +29,8 @@ def mainMenu():
 				registerMarriage()
 			# elif selection == 3:
 			# 	renewRegistration()
-			# elif selection == 4:
-			# 	processBOS()
+			elif selection == 4:
+				processBOS()
 			# elif selection == 5:
 			# 	processPayment()
 			# elif selection == 6:
@@ -38,6 +38,24 @@ def mainMenu():
 			elif selection == 7:
 				break
 	return
+
+
+def processBOS():
+	vin = raw_input("Enter vehicle VIN: ")
+	o_fname = raw_input("Current owner given name: ")
+	o_lname = raw_input("Current owner surname: ")
+	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
+	while not vehicle:
+		print "Owner does not match VIN..."
+		vin = raw_input("Enter vehicle VIN: ")
+		vehicle = db.getVehicleRegByVIN(vin, fname, lname)
+	vehicle = db.getVehicleRegByVIN(vin, fname, lname)[0]
+	db.setRegistrationExpiry(vehicle[0], datetime.date(datetime.now()))
+	p_fname = raw_input("Purchaser given name: ")
+	p_lname = raw_input("Purchaser surname: ")
+	
+
+
 
 
 def registerBirth():

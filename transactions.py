@@ -140,6 +140,29 @@ class Database(object):
 		else:
 			return result
 
+	def getVehicleRegByVIN(self, vin, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT * FROM registrations WHERE vin=? AND fname=? AND lname=?",\
+			(vin, fname, lname))
+		result = c.fetchall()
+
+		if result == []:
+			return False
+		else:
+			return result
+
+	def setRegistrationExpiry(self, vin, expiry):
+		self.checkConn()
+		c = self.conn.cursor()
+		try:
+			c.execute("UPDATE registrations SET expiry=? WHERE vin=?", (expiry, vin))
+			self.conn.commit()
+		except Exception as e:
+			print('Error inside setRegistrationExpiry(): ' + str(e))
+			return False
+		return True
+
 		
 """ main for testing purposes """
 def main():
