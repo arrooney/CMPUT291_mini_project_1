@@ -2,6 +2,7 @@ import os, sys, tty, termios, time, signal, re
 from transactions import Database
 from datetime import date
 
+
 # globals
 users = None
 db = None
@@ -136,10 +137,12 @@ def getch():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
+
 def receiveSignal(signalNumber, frame):
     prettyPrint("Cancelled", 0.3)
     os.execl(sys.executable, sys.executable, *sys.argv)
     return
+
 
 def main():
 	if len(sys.argv) < 2 or not os.path.isfile(sys.argv[1]):
@@ -153,6 +156,7 @@ def main():
 	mainMenu()
 	db.close()
 	return
+
 
 if __name__ == "__main__":
 	signal.signal(signal.SIGINT, receiveSignal)

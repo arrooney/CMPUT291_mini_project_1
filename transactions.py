@@ -1,5 +1,6 @@
 import sqlite3
 
+
 """
 Class: Database
 	API
@@ -115,6 +116,7 @@ def main():
 	db = Database()
 	print db.getPersonInfo("sam", "smith")
 	db.close()
+
 
 if __name__ == '__main__':
     main()
