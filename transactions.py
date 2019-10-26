@@ -117,7 +117,7 @@ class Database(object):
 			print('Error inside setPersonInfo(): ' + str(e))
 
 
-	""" Given the first and last name, fine the info for a given person, return False if they
+	""" Given the first and last name, find the info for a given person, return False if they
 		don't yet exist in the DB """
 	def getPersonInfo(self, fname, lname):
 		self.checkConn()
@@ -129,12 +129,23 @@ class Database(object):
 			return False
 		else: return result
 
+	def getVehicleReg(self, regno):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT * FROM registrations WHERE regno=?", (regno,))
+		result = c.fetchall()
 
+		if result == []:
+			return False
+		else:
+			return result
+
+		
 """ main for testing purposes """
 def main():
 	# test register births
-	db = Database()
-	print db.getPersonInfo("sam", "smith")
+	db = Database("miniProj.db")
+	print db.getVehicleReg(746328)
 	db.close()
 
 

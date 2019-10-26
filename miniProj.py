@@ -103,7 +103,6 @@ def registerMarriage():
 	db.registerMarriage(regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
 	prettyPrint("Success!")
 
-
 def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None, phone=None):
 	if fname == None:
 		prettyPrint("Register a person")
@@ -120,8 +119,13 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 		phone = raw_input("Phone: ")
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
 
-
+def renewRegistration():
+    prettyPrint("")
+    
 def getDate(prompt):
+    
+    #check for date validity
+    
 	bdate = raw_input(prompt)
 	while not re.search("^[0-9]{4,}-[0-9]{2,}-[0-9]{2,}$", bdate):
 		bdate = raw_input(prompt)
