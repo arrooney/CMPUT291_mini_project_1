@@ -1,4 +1,4 @@
-import os, sys, tty, termios, time
+import os, sys, tty, termios, time, signal
 from transactions import Database
 from datetime import date
 users = None
@@ -8,7 +8,7 @@ db = None
 def mainMenu():
 	while True:
 		prettyPrint("Select an action:")
-		menuSelect = raw_input("[1] Register a birth\n[2] Register a marriage\n[3] Renew a vehicle registration\n[4] Process a bill of sale\n[5] Process a payment\n[6] Get a driver abstract\n[7] Quit\n")
+		menuSelect = raw_input("[1] Register a birth\n[2] Register a marriage\n[3] Renew a vehicle registration\n[4] Process a bill of sale\n[5] Process a payment\n[6] Get a driver abstract\n[7] Quit\n->")
 		if not menuSelect.isdigit():
 			print "Please choose a number from the menu:"
 		elif int(menuSelect) < 1 or int(menuSelect) > 7:
@@ -16,6 +16,8 @@ def mainMenu():
 		else:
 			# input is valid, continue
 			selection = int(menuSelect)
+
+			""" Main goal is to uncomment each of these """
 			if selection == 1:
 				registerBirth()
 			# elif selection == 2:
@@ -123,6 +125,11 @@ def getch():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
+def receiveSignal(signalNumber, frame):
+    prettyPrint("Cancelled", 0.3)
+    os.execl(sys.executable, sys.executable, *sys.argv)
+    return
+
 def main():
 	if len(sys.argv) < 2 or not os.path.isfile(sys.argv[1]):
 		print "Please supply valid database file name!"
@@ -137,4 +144,5 @@ def main():
 	return
 
 if __name__ == "__main__":
+	signal.signal(signal.SIGINT, receiveSignal)
 	main()
