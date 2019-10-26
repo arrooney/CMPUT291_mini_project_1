@@ -96,7 +96,7 @@ class Database(object):
 		regno = 0 if (result == None) else int(result) + 1
 		# insert the values
 		
-		c.execute("INSERT INTO births VALUES(?, ?, ?, ?, ?, ?, ?)",\
+		c.execute("INSERT INTO marriages VALUES(?, ?, ?, ?, ?, ?, ?)",\
 			(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))
 		result = c.fetchone()
 
