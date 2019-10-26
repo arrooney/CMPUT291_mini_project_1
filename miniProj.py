@@ -1,9 +1,9 @@
-import os, sys, tty, termios
+import os, sys, tty, termios, time
 from transactions import Database
 from datetime import date
-users = {"arrooney" : "password", "sudo" : "1234"}
+users = None
 clear = lambda: os.system('clear')
-db = Database()
+db = None
 
 def mainMenu():
 	while True:
@@ -86,28 +86,29 @@ def passwordAuth():
 	while True:
 		clear()
 		userName = raw_input("Username: ")
-		if userName in users.keys():
-			password = ''
-			print "Password: ",
-			while True:
-			    char = getch()
-			    if char == '\r':
-			    	print ""
-			        break
-			    password += char
-			    sys.stdout.write('*')
-			if password == users[userName]:
-				return
-			else:
-				print("Incorrect password")
+		password = ''
+		print "Password: ",
+		while True:
+			char = getch()
+			if char == '\r':
+				print ""
+				break
+			password += char
+			sys.stdout.write('*')
+		global users
+		users = db.getUserInfo(userName, password)
+		if users:
+			return
 		else:
-			print("Incorrect username")
+			prettyPrint("Incorrect", 0.3)
 
-def prettyPrint(output):
+
+def prettyPrint(output, timeout=0):
 	clear()
 	print "====================================="
 	print "\t" + output
 	print "====================================="
+	time.sleep(timeout)
 
 
 def getch():
@@ -123,7 +124,14 @@ def getch():
     return ch
 
 def main():
+	if len(sys.argv) < 2 or not os.path.isfile(sys.argv[1]):
+		print "Please supply valid database file name!"
+		return
+
+	global db
+	db = Database(sys.argv[1])
 	passwordAuth()
+	prettyPrint("Welcome, " + users[0], 1)
 	mainMenu()
 	db.close()
 	return

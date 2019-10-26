@@ -1,5 +1,4 @@
 import sqlite3
-path = './miniProj.db'
 
 """
 Class: Database
@@ -13,16 +12,17 @@ Class: Database
 class Database(object):
 
 	""" Constructor """
-	def __init__(self):
+	def __init__(self, dbfile):
 		# Initializing the class
 		self.conn = None
+		self.path = dbfile
 
 
 	""" Open the connection to the database file at <path> """
 	def openConn(self):
 		# open a database connection
 		try:
-			self.conn = sqlite3.connect(path)
+			self.conn = sqlite3.connect(self.path)
 		except Exception as e:
 			print('Error inside openConn(): ' + str(e))
 
@@ -39,23 +39,45 @@ class Database(object):
 		self.conn.close()
 
 
+	""" Get all of the user info from the DB """
+	def getUserInfo(self, username, password):
+		self.checkConn()
+		c = self.conn.cursor()
+
+		try:
+			c.execute("SELECT * FROM users WHERE pwd=? AND uid=?",\
+				(password, username))
+			result = c.fetchone()
+			self.conn.commit()
+		except Exception as e:
+			# assume that there is no such user - it could have been
+			# some other failure, but it's safe to treat any failure the same.
+			return False
+		if result != []:
+			return result
+		return False
+
+
 	""" Register a new birth - will auto increment the regno """
 	def registerBirth(self, fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname):
 		self.checkConn()
 		c = self.conn.cursor()
+		
 		# get the next sequential regno
 		if not self.getPersonInfo(f_fname, f_lname) or not self.getPersonInfo(m_fname, m_lname):
 			# one of the parents don't exist - this shold prompt user to enter them
 			print "One of these parents aren't registered"
 			return False
+		
 		c.execute("SELECT max(births.regno) from births")
 		result = c.fetchone()[0]
 		regno = 0 if (result == None) else int(result) + 1
 		# insert the values
+		
 		c.execute("INSERT INTO births VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",\
 			(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname))
 		result = c.fetchone()
-		print result
+
 		# close connection
 		self.conn.commit()
 		return True
@@ -65,6 +87,7 @@ class Database(object):
 	def setPersonInfo(self, fname, lname, bdate, bplace, address, phone):
 		self.checkConn()
 		c = self.conn.cursor()
+		
 		try:
 			c.execute("INSERT INTO persons VALUES (?,?,?,?,?,?)",\
 				(fname, lname, bdate, bplace, address, phone))
