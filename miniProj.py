@@ -25,8 +25,8 @@ def mainMenu():
 			""" Main goal is to uncomment each of these """
 			if selection == 1:
 				registerBirth()
-			# elif selection == 2:
-			# 	registerMarriage()
+			elif selection == 2:
+				registerMarriage()
 			# elif selection == 3:
 			# 	renewRegistration()
 			# elif selection == 4:
@@ -72,6 +72,37 @@ def registerBirth():
 	db.registerBirth(fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname)
 	prettyPrint("Success!")
 
+	
+def registerMarriage():
+	prettyPrint("Register a marriage")
+	print "Please input the partners...\n"
+	p1_fname = raw_input("Partner 1's first name: ")
+	p1_lname = raw_input("Partner 1's last name: ")
+	if not db.getPersonInfo(p1_fname, p1_lname):
+		print "Partner 1 is not in the database, please enter more info..."
+		gender = raw_input("Gender (M/F): ")
+		while gender not in "mMfF" or len(gender) != 1:
+			gender = raw_input("Gender (M/F): ")
+		bdate = getDate("Date of birth (yyyy-mm-dd): ")
+		bplace = raw_input("Place of birth: ")
+		registerPerson(p1_fname, p1_lname, bdate, bplace) 
+
+	p2_fname = raw_input("Partner 2's first name: ")
+	p2_lname = raw_input("Partner 2's last name: ")
+	if not db.getPersonInfo(p2_fname, p2_lname):
+		print "Partner 2 is not in the database, please enter more info..."
+		gender = raw_input("Gender (M/F): ")
+		while gender not in "mMfF" or len(gender) != 1:
+			gender = raw_input("Gender (M/F): ")
+		bdate = getDate("Date of birth (yyyy-mm-dd): ")
+		bplace = raw_input("Place of birth: ")
+		registerPerson(p1_fname, p2_lname, bdate, bplace) 
+
+	# update the marriages table:
+	regdate = date.today()
+	regplace = users[5] # location of user
+	db.registerMarriage(regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
+	prettyPrint("Success!")
 
 def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None, phone=None):
 	if fname == None:
