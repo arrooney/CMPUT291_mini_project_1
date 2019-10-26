@@ -1,9 +1,11 @@
 import os, sys, tty, termios, time, signal
 from transactions import Database
 from datetime import date
+
+# globals
 users = None
-clear = lambda: os.system('clear')
 db = None
+clear = lambda: os.system('clear')
 
 def mainMenu():
 	while True:

@@ -113,9 +113,6 @@ class Database(object):
 def main():
 	# test register births
 	db = Database()
-	print "asdf"
-	db.registerBirth("sd", "asdf", "m", "2019-10-25", "daf", "sdf", "sdf", "das", "asdf")
-	db.registerBirth("sd", "asdf", "m", "2019-10-25", "daf", "sdf", "sdf", "das", "asdf")
 	print db.getPersonInfo("sam", "smith")
 	db.close()
 
