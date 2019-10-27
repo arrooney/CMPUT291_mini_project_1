@@ -67,6 +67,7 @@ class Database(object):
 		# get the next sequential regno
 		if not self.getPersonInfo(f_fname, f_lname) or not self.getPersonInfo(m_fname, m_lname):
 			# one of the parents don't exist - this shold prompt user to enter them
+			# user should implement checks so that this never actually happens though
 			print "One of these parents aren't registered"
 			return False
 		

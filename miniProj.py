@@ -245,6 +245,7 @@ def prettyPrint(output, timeout=0):
 def getch():
 	# this code is based on the following stack overflow posting
 	# https://stackoverflow.com/questions/27631629/masking-user-input-in-python-with-asterisks
+	# allows us to get input without displaying it
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     try:
