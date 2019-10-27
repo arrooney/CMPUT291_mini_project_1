@@ -158,6 +158,20 @@ class Database(object):
 			return result
 
 	
+	def setNewRegistration(self, regno, regdate, expiry, plate, vin, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		try:
+			c.execute("INSERT INTO registrations VALUES (?,?,?,?,?,?,?)",\
+				(regno, regdate, expiry, plate, vin, fname, lname))
+			self.conn.commit()
+		except Exception as e:
+			print('Error inside setNewRegistration(): ' + str(e))
+			return False
+		return True
+
+
+
 	def setRegistrationExpiry(self, regno, expiry):
 		self.checkConn()
 		c = self.conn.cursor()

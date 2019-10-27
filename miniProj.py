@@ -50,6 +50,7 @@ def processBOS():
 		vin = raw_input("Enter vehicle VIN: ")
 		vehicle = db.getVehicleRegByVIN(vin, fname, lname)
 	vehicle = db.getVehicleRegByVIN(vin, fname, lname)[0]
+	# set the current registration of the vehicle to expire today
 	db.setRegistrationExpiry(vehicle[0], datetime.date(datetime.now()))
 	p_fname = raw_input("Purchaser given name: ")
 	p_lname = raw_input("Purchaser surname: ")
