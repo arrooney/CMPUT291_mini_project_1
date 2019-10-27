@@ -31,8 +31,8 @@ def mainMenu():
 				renewRegistration()
 			elif selection == 4:
 				processBOS()
-			# elif selection == 5:
-			# 	processPayment()
+			elif selection == 5:
+				processPayment()
 			# elif selection == 6:
 			# 	getDriverAbstract()
 			elif selection == 7:
@@ -143,7 +143,7 @@ def renewRegistration():
     prettyPrint("Renew a Registration")
     print "Please supply the information...\n"
     regno = raw_input("Registration Number of Vehicle")
-    
+    ticket = db.getVehicleReg(regno)
     while not db.getVehicleReg(regno):
         print "Vehicle Registration Number not found..."
         regno = raw_input("Registration Number of Vehicle")
@@ -167,7 +167,18 @@ def renewRegistration():
     
     #updating registration expiry
     db.setRegistrationExpiry(regno, expiry)
-    
+def processPayment():
+	prettyPrint("Process a payment")
+	print "Please enter a ticket number"
+	tno = raw_input("Ticket Number")
+	ticket = db.getTicketNumber(tno)
+	while not ticket:
+		print "Ticket Number not found..."
+		tno = raw_input("Ticket Number")
+		ticket = db.getTicketNumber(tno)
+	payment = raw_input("Please enter an amount to be paid")
+	db.processPayment(tno, date.today(), payment)
+	
 def getDate(prompt):
     
     #check for date validity

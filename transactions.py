@@ -162,8 +162,20 @@ class Database(object):
 			print('Error inside setRegistrationExpiry(): ' + str(e))
 			return False
 		return True
+	def processPayment(self, tno, pdate, amount):
+		return 
+	def getTicketNumber(self, tno):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT * FROM tickets WHERE tno=?", (tno,))
+		result = c.fetchall()
 
-		
+		if result == []:
+			print "ok"
+			return False
+		else:
+			return result
+
 """ main for testing purposes """
 def main():
 	# test register births
