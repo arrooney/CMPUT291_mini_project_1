@@ -128,7 +128,7 @@ class Database(object):
 		if result == []:
 			return False
 		else: return result
-
+		
 	def getVehicleReg(self, regno):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -171,10 +171,23 @@ class Database(object):
 		result = c.fetchall()
 
 		if result == []:
-			print "ok"
 			return False
 		else:
 			return result
+	def getAmountPaid(self, tno):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT sum(amount) FROM payments WHERE tno=?", (tno,))
+		result = c.fetchall()
+
+		return int(result[0][0])
+
+	def getFineAmount(self, tno):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT fine FROM tickets WHERE tno=?", (tno,))
+		result = c.fetchall()
+		return int(result[0][0])
 
 """ main for testing purposes """
 def main():

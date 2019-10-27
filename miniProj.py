@@ -177,6 +177,9 @@ def processPayment():
 		tno = raw_input("Ticket Number")
 		ticket = db.getTicketNumber(tno)
 	payment = raw_input("Please enter an amount to be paid")
+	while int(payment) + db.getAmountPaid(tno) > db.getFineAmount(tno):
+		print "You have paid more than the fine amount, please try again"
+		payment = raw_input("Please enter an amount to be paid")
 	db.processPayment(tno, date.today(), payment)
 	
 def getDate(prompt):
