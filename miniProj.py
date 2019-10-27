@@ -55,9 +55,6 @@ def processBOS():
 	p_lname = raw_input("Purchaser surname: ")
 	
 
-
-
-
 def registerBirth():
 	prettyPrint("Register a birth")
 	print "Please supply the information...\n"
@@ -138,15 +135,16 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 		phone = raw_input("Phone: ")
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
 
+
 def renewRegistration():
     #Input of registraion number for vehicle
     prettyPrint("Renew a Registration")
-    print "Please supply the information...\n"
-    regno = raw_input("Registration Number of Vehicle")
+    print "Please supply the information..."
+    regno = raw_input("Registration Number of Vehicle: ")
     ticket = db.getVehicleReg(regno)
     while not db.getVehicleReg(regno):
         print "Vehicle Registration Number not found..."
-        regno = raw_input("Registration Number of Vehicle")
+        regno = raw_input("Registration Number of Vehicle: ")
     
     vehicle = db.getVehicleReg(regno)[0]
     
@@ -167,19 +165,20 @@ def renewRegistration():
     
     #updating registration expiry
     db.setRegistrationExpiry(regno, expiry)
+
+
 def processPayment():
 	prettyPrint("Process a payment")
-	print "Please enter a ticket number"
-	tno = raw_input("Ticket Number")
+	tno = raw_input("Ticket Number: ")
 	ticket = db.getTicketNumber(tno)
 	while not ticket:
 		print "Ticket Number not found..."
-		tno = raw_input("Ticket Number")
+		tno = raw_input("Ticket Number: ")
 		ticket = db.getTicketNumber(tno)
-	payment = raw_input("Please enter an amount to be paid")
+	payment = raw_input("Please enter the amount to be paid: ")
 	while int(payment) + db.getAmountPaid(tno) > db.getFineAmount(tno):
 		print "You have paid more than the fine amount, please try again"
-		payment = raw_input("Please enter an amount to be paid")
+		payment = raw_input("Please enter the amount to be paid: ")
 	db.processPayment(tno, date.today(), payment)
 	
 def getDate(prompt):

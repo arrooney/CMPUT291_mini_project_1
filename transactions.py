@@ -82,6 +82,8 @@ class Database(object):
 		# close connection
 		self.conn.commit()
 		return True
+	
+
 	def registerMarriage(self, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -103,6 +105,7 @@ class Database(object):
 		# close connection
 		self.conn.commit()
 		return True
+
 
 	""" Add a new person to the DB """
 	def setPersonInfo(self, fname, lname, bdate, bplace, address, phone):
@@ -129,6 +132,7 @@ class Database(object):
 			return False
 		else: return result
 		
+	
 	def getVehicleReg(self, regno):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -140,6 +144,7 @@ class Database(object):
 		else:
 			return result
 
+	
 	def getVehicleRegByVIN(self, vin, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -152,6 +157,7 @@ class Database(object):
 		else:
 			return result
 
+	
 	def setRegistrationExpiry(self, regno, expiry):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -162,8 +168,12 @@ class Database(object):
 			print('Error inside setRegistrationExpiry(): ' + str(e))
 			return False
 		return True
+	
+
 	def processPayment(self, tno, pdate, amount):
 		return 
+	
+
 	def getTicketNumber(self, tno):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -174,6 +184,8 @@ class Database(object):
 			return False
 		else:
 			return result
+	
+
 	def getAmountPaid(self, tno):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -182,12 +194,14 @@ class Database(object):
 
 		return int(result[0][0])
 
+
 	def getFineAmount(self, tno):
 		self.checkConn()
 		c = self.conn.cursor()
 		c.execute("SELECT fine FROM tickets WHERE tno=?", (tno,))
 		result = c.fetchall()
 		return int(result[0][0])
+
 
 """ main for testing purposes """
 def main():
