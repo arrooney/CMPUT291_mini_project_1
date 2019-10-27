@@ -133,6 +133,7 @@ class Database(object):
 		else: return result
 		
 	
+	""" get registration info from a given regno """
 	def getVehicleReg(self, regno):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -145,6 +146,8 @@ class Database(object):
 			return result
 
 	
+	""" get registration info from vin, fname and lname - this is a 
+	valid candidate key  """
 	def getVehicleRegByVIN(self, vin, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -158,6 +161,7 @@ class Database(object):
 			return result
 
 	
+	""" insert a new entry to registrations table - automatically increment the regno """
 	def setNewRegistration(self, regdate, expiry, plate, vin, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -174,7 +178,7 @@ class Database(object):
 		return True
 
 
-
+	""" update the expiry on a given registration entry """
 	def setRegistrationExpiry(self, regno, expiry):
 		self.checkConn()
 		c = self.conn.cursor()
