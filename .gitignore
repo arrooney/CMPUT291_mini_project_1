@@ -2,11 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.vscode
+.autogit
 *.pyc
 # C extensions
 *.so
-
+a2-data.sql
 # Distribution / packaging
 .Python
 build/
