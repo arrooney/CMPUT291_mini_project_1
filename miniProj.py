@@ -10,7 +10,8 @@ db = None
 clear = lambda: os.system('clear')
 
 
-def mainMenu():
+def registryMainMenu():
+	# main menu for a registry agent
 	while True:
 		prettyPrint("Select an action:")
 		menuSelect = raw_input("[1] Register a birth\n[2] Register a marriage\n[3] Renew a vehicle registration\n[4] Process a bill of sale\n[5] Process a payment\n[6] Get a driver abstract\n[7] Quit\n->")
@@ -21,7 +22,6 @@ def mainMenu():
 		else:
 			# input is valid, continue
 			selection = int(menuSelect)
-
 			""" Main goal is to uncomment each of these """
 			if selection == 1:
 				registerBirth()
@@ -270,7 +270,16 @@ def main():
 	db = Database(sys.argv[1])
 	passwordAuth()
 	prettyPrint("Welcome, " + users[0], 0.5)
-	mainMenu()
+	userType = users[2]
+	if userType == 'a':
+		# user is an agent
+		registryMainMenu()
+	elif userType == 'o':
+		# user is an officer
+		print 'officer'
+	else:
+		prettyPrint("Something went wrong: invalid user type", 1)
+
 	db.close()
 	return
 
