@@ -148,7 +148,7 @@ class Database(object):
 	def getVehicleRegByVIN(self, vin, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT * FROM registrations WHERE vin=? AND fname=? AND lname=?",\
+		c.execute("SELECT * FROM registrations WHERE vin=? COLLATE NOCASE AND fname=? COLLATE NOCASE AND lname=? COLLATE NOCASE",\
 			(vin, fname, lname))
 		result = c.fetchall()
 
@@ -158,10 +158,13 @@ class Database(object):
 			return result
 
 	
-	def setNewRegistration(self, regno, regdate, expiry, plate, vin, fname, lname):
+	def setNewRegistration(self, regdate, expiry, plate, vin, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
 		try:
+			c.execute("SELECT max(registrations.regno) from registrations")
+			result = c.fetchone()[0]
+			regno = 0 if (result == None) else int(result) + 1
 			c.execute("INSERT INTO registrations VALUES (?,?,?,?,?,?,?)",\
 				(regno, regdate, expiry, plate, vin, fname, lname))
 			self.conn.commit()

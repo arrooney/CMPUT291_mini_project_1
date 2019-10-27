@@ -41,20 +41,39 @@ def mainMenu():
 
 
 def processBOS():
+	prettyPrint("Process Bill of Sale")
 	vin = raw_input("Enter vehicle VIN: ")
 	o_fname = raw_input("Current owner given name: ")
 	o_lname = raw_input("Current owner surname: ")
 	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
+
 	while not vehicle:
 		print "Owner does not match VIN..."
 		vin = raw_input("Enter vehicle VIN: ")
-		vehicle = db.getVehicleRegByVIN(vin, fname, lname)
-	vehicle = db.getVehicleRegByVIN(vin, fname, lname)[0]
+		o_fname = raw_input("Current owner given name: ")
+		o_lname = raw_input("Current owner surname: ")
+		vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
+	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)[0]
+
 	# set the current registration of the vehicle to expire today
-	db.setRegistrationExpiry(vehicle[0], datetime.date(datetime.now()))
+	regno = vehicle[0]
+	vin = vehicle[4] # just so that the case is more consistent
+	db.setRegistrationExpiry(regno, datetime.date(datetime.now()))
 	p_fname = raw_input("Purchaser given name: ")
 	p_lname = raw_input("Purchaser surname: ")
-	
+	plate = raw_input("New license plate: ")
+
+	# create new registration with new name, same old VIN
+	# regdate is today, and expiry is a year from now
+	today = date.today()
+	regdate = datetime.date(datetime.now()) # today
+	expiry = date(today.year + 1, today.month, today.day) # year from now
+
+	if not db.setNewRegistration(regdate, expiry, plate, vin, p_fname, p_lname):
+		prettyPrint("Something went wrong")
+		return
+	prettyPrint("Success", 0.3)
+
 
 def registerBirth():
 	prettyPrint("Register a birth")
@@ -86,7 +105,7 @@ def registerBirth():
 	regdate = date.today()
 	regplace = users[5] # location of user
 	db.registerBirth(fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname)
-	prettyPrint("Success!")
+	prettyPrint("Success", 0.3)
 
 	
 def registerMarriage():
@@ -118,7 +137,8 @@ def registerMarriage():
 	regdate = date.today()
 	regplace = users[5] # location of user
 	db.registerMarriage(regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
-	prettyPrint("Success!")
+	prettyPrint("Success", 0.3)
+
 
 def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None, phone=None):
 	if fname == None:
@@ -181,7 +201,8 @@ def processPayment():
 		print "You have paid more than the fine amount, please try again"
 		payment = raw_input("Please enter the amount to be paid: ")
 	db.processPayment(tno, date.today(), payment)
-	
+
+
 def getDate(prompt):
     
     #check for date validity
@@ -248,7 +269,7 @@ def main():
 	global db
 	db = Database(sys.argv[1])
 	passwordAuth()
-	prettyPrint("Welcome, " + users[0], 1)
+	prettyPrint("Welcome, " + users[0], 0.5)
 	mainMenu()
 	db.close()
 	return
