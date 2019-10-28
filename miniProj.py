@@ -33,8 +33,8 @@ def registryMainMenu():
 				processBOS()
 			elif selection == 5:
 				processPayment()
-			# elif selection == 6:
-			# 	getDriverAbstract()
+			elif selection == 6:
+				getDriverAbstract()
 			elif selection == 7:
 				break
 	return
@@ -106,8 +106,18 @@ def registerBirth():
 	regplace = users[5] # location of user
 	db.registerBirth(fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname)
 	prettyPrint("Success", 0.3)
+def getDriverAbstract():
+	prettyPrint("Get a driver's abstract")
+	fname = raw_input ("Enter the driver's first name")
+	lname = raw_input ("Enter the driver's last name")
+	person = db.getPersonInfo(fname, lname)
+	while not person:
+		print "Person not found..."
+		fname = raw_input ("Enter the driver's first name")
+		lname = raw_input ("Enter the driver's last name")
+		person = db.getPersonInfo(fname, lname)
+	print db.getTicketTotal(fname, lname)
 
-	
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"

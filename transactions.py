@@ -213,7 +213,17 @@ class Database(object):
 			return False
 		else:
 			return result
-	
+
+	def getTicketTotal(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT count(tno) FROM tickets r, registrations t WHERE r.regno = t.regno and fname = ? and lname = ?", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0][0])
+		except:
+			return 0
+		return int(result[0][0])
 
 	def getAmountPaid(self, tno):
 		self.checkConn()
