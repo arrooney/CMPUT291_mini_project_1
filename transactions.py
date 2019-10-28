@@ -217,7 +217,7 @@ class Database(object):
 	def getTicketTotal(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(tno) FROM tickets r, registrations t WHERE r.regno = t.regno and fname = ? and lname = ?", (fname, lname))
+		c.execute("SELECT count(tno) FROM tickets r, registrations t WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0][0])
