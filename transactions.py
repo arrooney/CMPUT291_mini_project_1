@@ -213,7 +213,10 @@ class Database(object):
 		c = self.conn.cursor()
 		c.execute("SELECT sum(amount) FROM payments WHERE tno=?", (tno,))
 		result = c.fetchall()
-
+		try:
+			int(result[0][0])
+		except:
+			return 0
 		return int(result[0][0])
 
 
@@ -222,6 +225,10 @@ class Database(object):
 		c = self.conn.cursor()
 		c.execute("SELECT fine FROM tickets WHERE tno=?", (tno,))
 		result = c.fetchall()
+		try:
+			int(result[0][0])
+		except:
+			return 0
 		return int(result[0][0])
 
 
