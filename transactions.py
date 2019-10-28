@@ -193,7 +193,14 @@ class Database(object):
 	
 
 	def processPayment(self, tno, pdate, amount):
-		return 
+		self.checkConn()
+		c = self.conn.cursor()
+		
+		c.execute("INSERT INTO payments VALUES(?, ?, ?)",\
+			(tno, pdate, amount))
+		
+		self.conn.commit()
+		return True 
 	
 
 	def getTicketNumber(self, tno):
