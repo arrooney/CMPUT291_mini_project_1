@@ -226,6 +226,38 @@ class Database(object):
 			return 0
 		return int(result[0][0])
 
+	def getDemeritCount(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT count(*) FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0][0])
+		except:
+			return 0
+		return int(result[0][0])
+
+	def getDemeritPoints(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT sum(points) FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0][0])
+		except:
+			return 0
+		return int(result[0][0])
+
+	def getDemeritPointsLast2(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT sum(points) FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE and ddate > date('now', '-2 year')", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0][0])
+		except:
+			return 0
+		return int(result[0][0])
 
 	def getAmountPaid(self, tno):
 		self.checkConn()

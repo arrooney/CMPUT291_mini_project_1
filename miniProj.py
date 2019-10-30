@@ -118,8 +118,12 @@ def getDriverAbstract():
 		fname = raw_input ("Enter the driver's first name")
 		lname = raw_input ("Enter the driver's last name")
 		person = db.getPersonInfo(fname, lname)
-	print db.getTicketTotal(fname, lname)
-
+	print "Number of tickets obtained in total:" ,(db.getTicketTotal(fname, lname))
+	print "Number of demerits obtained in total:" ,(db.getDemeritCount(fname, lname))
+	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
+	print "Number of demerit points obtained in the last 2 years", (db.getDemeritPointsLast2(fname, lname))
+	while True:
+		raw_input("Press enter to see more")
 
 def registerMarriage():
 	prettyPrint("Register a marriage")
