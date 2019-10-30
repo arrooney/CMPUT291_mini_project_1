@@ -226,6 +226,17 @@ class Database(object):
 			return 0
 		return int(result[0][0])
 
+	
+	def getTicketInfo(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		result = c.fetchall()
+		try:
+			int(result[0][0])
+		except:
+			return 0
+		return int(result[0][0])
+
 	def getDemeritCount(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
