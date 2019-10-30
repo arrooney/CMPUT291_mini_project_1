@@ -132,8 +132,8 @@ class Database(object):
 		if result == []:
 			return False
 		else: return result
-		
-	
+
+
 	""" get registration info from a given regno """
 	def getVehicleReg(self, regno):
 		self.checkConn()
@@ -214,6 +214,7 @@ class Database(object):
 		else:
 			return result
 
+
 	def getTicketTotal(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -224,6 +225,7 @@ class Database(object):
 		except:
 			return 0
 		return int(result[0][0])
+
 
 	def getAmountPaid(self, tno):
 		self.checkConn()
