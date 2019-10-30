@@ -241,7 +241,8 @@ def passwordAuth():
 			sys.stdout.write('*')
 		global users
 		users = db.getUserInfo(userName, password)
-		if users:
+		# the following is a little extra safety for passwords (although, placeholders should protect from injections)
+		if users and re.search("^[a-zA-Z!@#$%\\^&*()1-9]*$", userName) and re.search("^[a-zA-Z!@#$%\\^&*()1-9]*$", password):
 			return
 		else:
 			prettyPrint("Incorrect", 0.3)
