@@ -46,7 +46,7 @@ class Database(object):
 		c = self.conn.cursor()
 
 		try:
-			c.execute("SELECT * FROM users WHERE pwd=? AND uid=?",\
+			c.execute("SELECT * FROM users WHERE pwd=? AND uid=? COLLATE NOCASE",\
 				(password, username))
 			result = c.fetchone()
 			self.conn.commit()
