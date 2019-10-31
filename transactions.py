@@ -149,7 +149,7 @@ class Database(object):
 		c = self.conn.cursor()
 		c.execute("SELECT * FROM registrations WHERE regno=?", (regno,))
 		result = c.fetchall()
-		print result
+
 		if result == []:
 			return False
 		else:
@@ -227,13 +227,13 @@ class Database(object):
 	def getTicketTotal(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(tno) FROM tickets r, registrations t WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("SELECT count(tno) as numTickets FROM tickets r, registrations t WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
-			int(result[0][0])
+			int(result[0]['numTickets'])
 		except:
 			return 0
-		return int(result[0][0])
+		return int(result[0]['numTickets'])
 
 	
 	def getTicketInfo(self, fname, lname):
@@ -249,46 +249,47 @@ class Database(object):
 	def getDemeritCount(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(*) FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("SELECT count(*) as allNotices FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
-			int(result[0][0])
+			int(result[0]['allNotices'])
 		except:
 			return 0
-		return int(result[0][0])
+		return int(result[0]['allNotices'])
 
 	def getDemeritPoints(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT sum(points) FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("SELECT sum(points) as totalPoints FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
-			int(result[0][0])
+			int(result[0]['totalPoints'])
 		except:
 			return 0
-		return int(result[0][0])
+		return int(result[0]['totalPoints'])
 
 	def getDemeritPointsLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT sum(points) FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE and ddate > date('now', '-2 year')", (fname, lname))
+		c.execute("SELECT sum(points) as totalPoints FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE and ddate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
-			int(result[0][0])
+			int(result[0]['totalPoints'])
 		except:
 			return 0
-		return int(result[0][0])
+		return int(result[0]['totalPoints'])
 
 	def getAmountPaid(self, tno):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT sum(amount) FROM payments WHERE tno=?", (tno,))
+		c.execute("SELECT sum(amount) as totalAmount FROM payments WHERE tno=?", (tno,))
 		result = c.fetchall()
+		print result
 		try:
-			int(result[0][0])
+			int(result[0]['totalAmount'])
 		except:
 			return 0
-		return int(result[0][0])
+		return int(result[0]['totalPoints'])
 
 
 	def getFineAmount(self, tno):
@@ -297,10 +298,10 @@ class Database(object):
 		c.execute("SELECT fine FROM tickets WHERE tno=?", (tno,))
 		result = c.fetchall()
 		try:
-			int(result[0][0])
+			int(result[0]['fine'])
 		except:
 			return 0
-		return int(result[0][0])
+		return int(result[0]['fine'])
 
 
 """ main for testing purposes """
@@ -308,6 +309,7 @@ def main():
 	# test register births
 	db = Database("miniProj.db")
 	print db.getVehicleReg(30000)
+	db.getAmountPaid(400)
 	db.close()
 
 
