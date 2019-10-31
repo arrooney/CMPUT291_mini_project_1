@@ -57,7 +57,7 @@ def officerMainMenu():
 			# 	issueTicket()
 			# elif selection == 2:
 			# 	findCarOwner()
-			elif selection == 3:
+			if selection == 3:
 				break
 	return
 
