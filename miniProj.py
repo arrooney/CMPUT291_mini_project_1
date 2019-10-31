@@ -144,6 +144,7 @@ def getDriverAbstract():
 	print "Number of demerits obtained in total:" ,(db.getDemeritCount(fname, lname))
 	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
+	print db.getTicketInfo(fname, lname)
 	while True:
 		raw_input("Press enter to see more")
 
