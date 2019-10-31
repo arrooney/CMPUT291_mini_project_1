@@ -78,8 +78,8 @@ def processBOS():
 	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)[0]
 
 	# set the current registration of the vehicle to expire today
-	regno = vehicle[0]
-	vin = vehicle[4] # just so that the case is more consistent
+	regno = vehicle['regno']
+	vin = vehicle['vin'] # just so that the case is more consistent
 	db.setRegistrationExpiry(regno, datetime.date(datetime.now()))
 	p_fname = raw_input("Purchaser given name: ")
 	p_lname = raw_input("Purchaser surname: ")
@@ -122,10 +122,10 @@ def registerBirth():
 	motherInfo = db.getPersonInfo(m_fname, m_lname)[0]
 	# update the persons table - give baby same phone and address of mother
 	if not db.getPersonInfo(fname, lname):
-		registerPerson(fname, lname, bdate, bplace, motherInfo[4], motherInfo[5])
+		registerPerson(fname, lname, bdate, bplace, motherInfo['address'], motherInfo['phone'])
 	# update the births table:
 	regdate = date.today()
-	regplace = users[5] # location of user
+	regplace = users['city'] # location of user
 	db.registerBirth(fname, lname, gender, regdate, regplace, f_fname, f_lname, m_fname, m_lname)
 	prettyPrint("Success", 0.3)
 
@@ -174,7 +174,7 @@ def registerMarriage():
 
 	# update the marriages table:
 	regdate = date.today()
-	regplace = users[5] # location of user
+	regplace = users['city'] # location of user
 	db.registerMarriage(regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
 	prettyPrint("Success", 0.3)
 
@@ -209,7 +209,7 @@ def renewRegistration():
     vehicle = db.getVehicleReg(regno)[0]
     
     #getting expiry date for vehicle and todays date
-    expiry = time.strptime(vehicle[2], "%d-%m-%Y")
+    expiry = time.strptime(vehicle['expiry'], "%d-%m-%Y")
     today = date.today()
     
     #checking if registration is expired
@@ -310,8 +310,8 @@ def main():
 	global db
 	db = Database(sys.argv[1])
 	passwordAuth()
-	prettyPrint("Welcome, " + users[0], 0.5)
-	userType = users[2]
+	prettyPrint("Welcome, " + users['uid'], 0.5)
+	userType = users['utype']
 	if userType == 'a':
 		# user is an agent
 		registryMainMenu()

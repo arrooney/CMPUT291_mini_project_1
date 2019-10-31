@@ -19,11 +19,20 @@ class Database(object):
 		self.path = dbfile
 
 
+	def dictionary_factory(self, cursor, row):
+		# From lab notes - credit goes to TA's
+		dict = {}
+		for i, col in enumerate(cursor.description):
+			dict[col[0]] = row[i]
+		return dict
+
+
 	""" Open the connection to the database file at <path> """
 	def openConn(self):
 		# open a database connection
 		try:
 			self.conn = sqlite3.connect(self.path)
+			self.conn.row_factory = self.dictionary_factory
 		except Exception as e:
 			print('Error inside openConn(): ' + str(e))
 
@@ -140,7 +149,7 @@ class Database(object):
 		c = self.conn.cursor()
 		c.execute("SELECT * FROM registrations WHERE regno=?", (regno,))
 		result = c.fetchall()
-
+		print result
 		if result == []:
 			return False
 		else:
@@ -298,7 +307,7 @@ class Database(object):
 def main():
 	# test register births
 	db = Database("miniProj.db")
-	print db.getVehicleReg(746328)
+	print db.getVehicleReg(30000)
 	db.close()
 
 
