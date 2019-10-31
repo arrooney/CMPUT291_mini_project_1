@@ -40,6 +40,28 @@ def registryMainMenu():
 	return
 
 
+def officerMainMenu():
+	# main menu for a user of type 'Officer'
+	while True:
+		prettyPrint("Select an action:")
+		menuSelect = raw_input("[1] Issue a ticket\n[2] Find a car owner\n[3] Quit\n->")
+		if not menuSelect.isdigit():
+			print "Please choose a number from the menu:"
+		elif int(menuSelect) < 1 or int(menuSelect) > 3:
+			print "please select a number 1-7"
+		else:
+			# input is valid, continue
+			selection = int(menuSelect)
+			""" Main goal is to uncomment each of these """
+			# if selection == 1:
+			# 	issueTicket()
+			# elif selection == 2:
+			# 	findCarOwner()
+			elif selection == 3:
+				break
+	return
+
+
 def processBOS():
 	prettyPrint("Process Bill of Sale")
 	vin = raw_input("Enter vehicle VIN: ")
@@ -295,7 +317,7 @@ def main():
 		registryMainMenu()
 	elif userType == 'o':
 		# user is an officer
-		print 'officer'
+		officerMainMenu()
 	else:
 		prettyPrint("Something went wrong: invalid user type", 1)
 
