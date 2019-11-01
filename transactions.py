@@ -262,6 +262,7 @@ class Database(object):
 			return False
 		else:
 			return result
+
 	def getTicketInfoOrdered(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
