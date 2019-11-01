@@ -193,13 +193,13 @@ def getDriverAbstract():
 	else:
 		sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
 		for tickets in sub_list:
+			clear()
 			for ticket in tickets:
 				print ("")
 				print "Info for ticket", tickNum
 				tickNum+=1
 				for k, v in ticket.iteritems():
 					print k, ":", v, ',',
-				
 			print ("")
 			raw_input("Press enter to see 5 more"),
 def registerMarriage():
