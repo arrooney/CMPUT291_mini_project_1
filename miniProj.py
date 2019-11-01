@@ -235,11 +235,11 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 	if bdate == None:
 		bdate = getDate("Date of birth: ")
 	if bplace == None:
-		bplace = raw_input("Place of birth: ")
+		bplace = maybeNullInput("Place of birth: ")
 	if address == None:
-		address = raw_input("Address: ")
+		address = maybeNullInput("Address: ")
 	if phone == None:
-		phone = raw_input("Phone: ")
+		phone = maybeNullInput("Phone: ")
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
 
 
@@ -292,6 +292,9 @@ def processPayment():
 def getDate(prompt):
     # TODO: check for date semantics
 	bdate = raw_input(prompt)
+	if bdate == "":
+		bdate = None
+		return bdate
 	while not re.search("^[0-9]{4,}-[0-9]{2,}-[0-9]{2,}$", bdate):
 		bdate = raw_input(prompt)
 	return bdate
@@ -311,6 +314,14 @@ def nonNullInput(prompt):
 	while inp == "":
 		print "Please provide input"
 		inp = raw_input(prompt)
+	return inp
+
+
+def maybeNullInput(prompt):
+	# return null if string is empty
+	inp = raw_input(prompt)
+	if inp == "":
+		inp = None
 	return inp
 
 
