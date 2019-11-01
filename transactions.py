@@ -383,7 +383,7 @@ class Database(object):
 			int(result[0]['totalAmount'])
 		except:
 			return 0
-		return int(result[0]['totalPoints'])
+		return int(result[0]['totalAmount'])
 
 
 	def getFineAmount(self, tno):
