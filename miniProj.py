@@ -138,20 +138,20 @@ def processBOS():
 def registerBirth():
 	prettyPrint("Register a birth")
 	print "Please supply the information...\n"
-	fname = raw_input("Baby's given name: ")
-	lname = raw_input("Baby's surname: ")
+	fname = nonNullInput("Baby's given name: ")
+	lname = nonNullInput("Baby's surname: ")
 	gender = raw_input("Gender (M/F): ")
 	while gender not in "mMfF" or len(gender) != 1:
 		gender = raw_input("Gender (M/F): ")
 	bdate = getDate("Date of birth (yyyy-mm-dd): ")
-	bplace = raw_input("Place of birth: ")
-	f_fname = raw_input("Father's first name: ")
-	f_lname = raw_input("Father's last name: ")
+	bplace = nonNullInput("Place of birth: ")
+	f_fname = nonNullInput("Father's first name: ")
+	f_lname = nonNullInput("Father's last name: ")
 	if not db.getPersonInfo(f_fname, f_lname):
 		print "Father not found, please enter more info..."
 		registerPerson(f_fname, f_lname)
-	m_fname = raw_input("Mother's first name: ")
-	m_lname = raw_input("Mother's last name: ")
+	m_fname = nonNullInput("Mother's first name: ")
+	m_lname = nonNullInput("Mother's last name: ")
 	motherInfo = db.getPersonInfo(m_fname, m_lname)
 	if not motherInfo:
 		print "Mother not found, please enter more info..."
@@ -229,9 +229,9 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 	# TODO: let values be null
 	if fname == None:
 		prettyPrint("Register a person")
-		fname = raw_input("Enter first name: ")
+		fname = nonNullInput("Enter first name: ")
 	if lname == None:
-		lname = raw_input("Enter last name: ")
+		lname = nonNullInput("Enter last name: ")
 	if bdate == None:
 		bdate = getDate("Date of birth: ")
 	if bplace == None:
@@ -303,6 +303,15 @@ def numericInput(prompt):
 	while not re.search("^[0-9]+.?[0-9]*$", numeric):
 		numeric = raw_input(prompt)
 	return numeric
+
+
+def nonNullInput(prompt):
+	# enforce that something (anyhting) be input
+	inp = raw_input(prompt)
+	while inp == "":
+		print "Please provide input"
+		inp = raw_input(prompt)
+	return inp
 
 
 def passwordAuth():
