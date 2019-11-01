@@ -102,16 +102,16 @@ def issueTicket():
 
 def processBOS():
 	prettyPrint("Process Bill of Sale")
-	vin = raw_input("Enter vehicle VIN: ")
-	o_fname = raw_input("Current owner given name: ")
-	o_lname = raw_input("Current owner surname: ")
+	vin = nonNullInput("Enter vehicle VIN: ")
+	o_fname = nonNullInput("Current owner given name: ")
+	o_lname = nonNullInput("Current owner surname: ")
 	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
 
 	while not vehicle:
 		print "Owner does not match VIN..."
-		vin = raw_input("Enter vehicle VIN: ")
-		o_fname = raw_input("Current owner given name: ")
-		o_lname = raw_input("Current owner surname: ")
+		vin = nonNullInput("Enter vehicle VIN: ")
+		o_fname = nonNullInput("Current owner given name: ")
+		o_lname = nonNullInput("Current owner surname: ")
 		vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
 	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)[0]
 
@@ -119,9 +119,9 @@ def processBOS():
 	regno = vehicle['regno']
 	vin = vehicle['vin'] # just so that the case is more consistent
 	db.setRegistrationExpiry(regno, datetime.date(datetime.now()))
-	p_fname = raw_input("Purchaser given name: ")
-	p_lname = raw_input("Purchaser surname: ")
-	plate = raw_input("New license plate: ")
+	p_fname = nonNullInput("Purchaser given name: ")
+	p_lname = nonNullInput("Purchaser surname: ")
+	plate = nonNullInput("New license plate: ")
 
 	# create new registration with new name, same old VIN
 	# regdate is today, and expiry is a year from now
@@ -170,13 +170,13 @@ def registerBirth():
 
 def getDriverAbstract():
 	prettyPrint("Get a driver's abstract")
-	fname = raw_input ("Enter the driver's first name")
-	lname = raw_input ("Enter the driver's last name")
+	fname = raw_input ("Enter the driver's first name: ")
+	lname = raw_input ("Enter the driver's last name: ")
 	person = db.getPersonInfo(fname, lname)
 	while not person:
 		print "Person not found..."
-		fname = raw_input ("Enter the driver's first name")
-		lname = raw_input ("Enter the driver's last name")
+		fname = raw_input ("Enter the driver's first name: ")
+		lname = raw_input ("Enter the driver's last name: ")
 		person = db.getPersonInfo(fname, lname)
 	print "Number of tickets obtained in total:" ,(db.getTicketTotal(fname, lname))
 	print "Number of demerits obtained in total:" ,(db.getDemeritCount(fname, lname))
