@@ -256,7 +256,7 @@ def renewRegistration():
     vehicle = db.getVehicleReg(regno)[0]
     
     #getting expiry date for vehicle and todays date
-    expiry = time.strptime(vehicle['expiry'], "%d-%m-%Y")
+    expiry = time.strptime(vehicle['expiry'], "%d-%m-%Y").date()
     today = date.today()
     
     #checking if registration is expired
@@ -290,7 +290,7 @@ def processPayment():
 
 
 def getDate(prompt):
-    # TODO: check for date semantics
+    #TODO: check for date semantics
 	bdate = raw_input(prompt)
 	while not re.search("^[0-9]{4,}-[0-9]{2,}-[0-9]{2,}$", bdate):
 		bdate = raw_input(prompt)
@@ -306,7 +306,7 @@ def numericInput(prompt):
 
 
 def nonNullInput(prompt):
-	# enforce that something (anyhting) be input
+	# enforce that something (anything) be input
 	inp = raw_input(prompt)
 	while inp == "":
 		print "Please provide input"
