@@ -102,16 +102,16 @@ def issueTicket():
 
 def processBOS():
 	prettyPrint("Process Bill of Sale")
-	vin = raw_input("Enter vehicle VIN: ")
-	o_fname = raw_input("Current owner given name: ")
-	o_lname = raw_input("Current owner surname: ")
+	vin = nonNullInput("Enter vehicle VIN: ")
+	o_fname = nonNullInput("Current owner given name: ")
+	o_lname = nonNullInput("Current owner surname: ")
 	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
 
 	while not vehicle:
 		print "Owner does not match VIN..."
-		vin = raw_input("Enter vehicle VIN: ")
-		o_fname = raw_input("Current owner given name: ")
-		o_lname = raw_input("Current owner surname: ")
+		vin = nonNullInput("Enter vehicle VIN: ")
+		o_fname = nonNullInput("Current owner given name: ")
+		o_lname = nonNullInput("Current owner surname: ")
 		vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
 	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)[0]
 
@@ -119,9 +119,9 @@ def processBOS():
 	regno = vehicle['regno']
 	vin = vehicle['vin'] # just so that the case is more consistent
 	db.setRegistrationExpiry(regno, datetime.date(datetime.now()))
-	p_fname = raw_input("Purchaser given name: ")
-	p_lname = raw_input("Purchaser surname: ")
-	plate = raw_input("New license plate: ")
+	p_fname = nonNullInput("Purchaser given name: ")
+	p_lname = nonNullInput("Purchaser surname: ")
+	plate = nonNullInput("New license plate: ")
 
 	# create new registration with new name, same old VIN
 	# regdate is today, and expiry is a year from now
@@ -170,52 +170,58 @@ def registerBirth():
 
 def getDriverAbstract():
 	prettyPrint("Get a driver's abstract")
-	fname = raw_input ("Enter the driver's first name")
-	lname = raw_input ("Enter the driver's last name")
+	fname = raw_input ("Enter the driver's first name: ")
+	lname = raw_input ("Enter the driver's last name: ")
 	person = db.getPersonInfo(fname, lname)
 	while not person:
 		print "Person not found..."
-		fname = raw_input ("Enter the driver's first name")
-		lname = raw_input ("Enter the driver's last name")
+		fname = raw_input ("Enter the driver's first name: ")
+		lname = raw_input ("Enter the driver's last name: ")
 		person = db.getPersonInfo(fname, lname)
 	print "Number of tickets obtained in total:" ,(db.getTicketTotal(fname, lname))
 	print "Number of demerits obtained in total:" ,(db.getDemeritCount(fname, lname))
 	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
 	tickNum = 1
-	for row in db.getTicketInfo(fname, lname):
-		print ""
-		print "Info for ticket", tickNum
-		tickNum += 1
-		for k, v in row.iteritems():
-			print k, ':', v, ",",
-	print ""
-	while True:
-		raw_input("Press enter to see more")
-
+	viewChoice = raw_input("Would you like to view the tickets ordered by date? (y/n)")
+	if viewChoice == 'n':
+		tickets = db.getTicketInfo(fname, lname)
+	elif viewChoice == 'y':
+		tickets = db.getTicketInfoOrdered(fname, lname)
+	sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
+	for tickets in sub_list:
+		for ticket in tickets:
+			print ("")
+			print "Info for ticket", tickNum
+			tickNum+=1
+			for k, v in ticket.iteritems():
+				print k, ":", v, ',',
+			
+		print ("")
+		raw_input("Press enter to see 5 more"),
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"
-	p1_fname = raw_input("Partner 1's first name: ")
-	p1_lname = raw_input("Partner 1's last name: ")
+	p1_fname = nonNullInput("Partner 1's first name: ")
+	p1_lname = nonNullInput("Partner 1's last name: ")
 	if not db.getPersonInfo(p1_fname, p1_lname):
 		print "Partner 1 is not in the database, please enter more info..."
 		gender = raw_input("Gender (M/F): ")
 		while gender not in "mMfF" or len(gender) != 1:
 			gender = raw_input("Gender (M/F): ")
 		bdate = getDate("Date of birth (yyyy-mm-dd): ")
-		bplace = raw_input("Place of birth: ")
+		bplace = nonNullInput("Place of birth: ")
 		registerPerson(p1_fname, p1_lname, bdate, bplace) 
 
-	p2_fname = raw_input("Partner 2's first name: ")
-	p2_lname = raw_input("Partner 2's last name: ")
+	p2_fname = nonNullInput("Partner 2's first name: ")
+	p2_lname = nonNullInput("Partner 2's last name: ")
 	if not db.getPersonInfo(p2_fname, p2_lname):
 		print "Partner 2 is not in the database, please enter more info..."
-		gender = raw_input("Gender (M/F): ")
+		gender = nonNullInput("Gender (M/F): ")
 		while gender not in "mMfF" or len(gender) != 1:
-			gender = raw_input("Gender (M/F): ")
+			gender = nonNullInput("Gender (M/F): ")
 		bdate = getDate("Date of birth (yyyy-mm-dd): ")
-		bplace = raw_input("Place of birth: ")
+		bplace = nonNullInput("Place of birth: ")
 		registerPerson(p1_fname, p2_lname, bdate, bplace) 
 
 	# update the marriages table:
@@ -235,11 +241,11 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 	if bdate == None:
 		bdate = getDate("Date of birth: ")
 	if bplace == None:
-		bplace = raw_input("Place of birth: ")
+		bplace = maybeNullInput("Place of birth: ")
 	if address == None:
-		address = raw_input("Address: ")
+		address = maybeNullInput("Address: ")
 	if phone == None:
-		phone = raw_input("Phone: ")
+		phone = maybeNullInput("Phone: ")
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
 
 
@@ -256,7 +262,7 @@ def renewRegistration():
     vehicle = db.getVehicleReg(regno)[0]
     
     #getting expiry date for vehicle and todays date
-    expiry = time.strptime(vehicle['expiry'], "%d-%m-%Y").date()
+    expiry = time.strptime(vehicle['expiry'], "%Y-%m-%d").date()
     today = date.today()
     
     #checking if registration is expired
@@ -267,8 +273,10 @@ def renewRegistration():
     #incrementing a year onto vehicle registration if registration has expired
     if is_expired:
     	expiry = today + relativedelta(years=1)
+		print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
     else:
         expiry += relativedelta(years=1)
+        print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
     
     #updating registration expiry
     db.setRegistrationExpiry(regno, expiry)
@@ -292,6 +300,9 @@ def processPayment():
 def getDate(prompt):
     #TODO: check for date semantics
 	bdate = raw_input(prompt)
+	if bdate == "":
+		bdate = None
+		return bdate
 	while not re.search("^[0-9]{4,}-[0-9]{2,}-[0-9]{2,}$", bdate):
 		bdate = raw_input(prompt)
 	return bdate
@@ -311,6 +322,14 @@ def nonNullInput(prompt):
 	while inp == "":
 		print "Please provide input"
 		inp = raw_input(prompt)
+	return inp
+
+
+def maybeNullInput(prompt):
+	# return null if string is empty
+	inp = raw_input(prompt)
+	if inp == "":
+		inp = None
 	return inp
 
 
