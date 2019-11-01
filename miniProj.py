@@ -22,7 +22,7 @@ def registryMainMenu():
 		else:
 			# input is valid, continue
 			selection = int(menuSelect)
-			""" Main goal is to uncomment each of these """
+			""" Main menu options """
 			if selection == 1:
 				registerBirth()
 			elif selection == 2:
@@ -95,6 +95,7 @@ def issueTicket():
 	violation = raw_input("Violation info: ")
 	fine = numericInput("Amount: ")
 	if db.issueTicket(regno, fine, violation, vdate):
+		# otherwise something went wrong, hard to know what
 		prettyPrint("Success", 0.3)
 	return
 
