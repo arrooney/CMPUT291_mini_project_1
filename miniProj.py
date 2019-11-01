@@ -284,16 +284,6 @@ def renewRegistration():
     
     #incrementing a year onto vehicle registration if registration has expired
     if is_expired:
-		expiry = today + relativedelta(years=1)
-		print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
-    else:
-        expiry += relativedelta(years=1)
-        print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
-    #updating registration expiry
-    db.setRegistrationExpiry(regno, expiry)
-    
-    #incrementing a year onto vehicle registration if registration has expired
-    if is_expired:
     	expiry = today + relativedelta(years=1)
     else:
         expiry += relativedelta(years=1)
@@ -302,6 +292,8 @@ def renewRegistration():
     db.setRegistrationExpiry(regno, expiry)
     
     print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
+    
+    time.sleep(5)
 
 
 def processPayment():
