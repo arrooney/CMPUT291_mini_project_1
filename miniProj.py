@@ -206,19 +206,9 @@ def getDriverAbstract():
 				for k, v in ticket.iteritems():
 					print k, ":", v, ',',
 			print ("")
-<<<<<<< Updated upstream
 			raw_input("Press enter to see 5 more"),
-=======
-			print "Info for ticket", tickNum
-			tickNum+=1
-			for k, v in ticket.iteritems():
-				print k, ":", v, ',',
-			
-		print ("")
-		raw_input("Press enter to see 5 more"),
 
 
->>>>>>> Stashed changes
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"
