@@ -196,26 +196,26 @@ def getDriverAbstract():
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"
-	p1_fname = raw_input("Partner 1's first name: ")
-	p1_lname = raw_input("Partner 1's last name: ")
+	p1_fname = nonNullInput("Partner 1's first name: ")
+	p1_lname = nonNullInput("Partner 1's last name: ")
 	if not db.getPersonInfo(p1_fname, p1_lname):
 		print "Partner 1 is not in the database, please enter more info..."
 		gender = raw_input("Gender (M/F): ")
 		while gender not in "mMfF" or len(gender) != 1:
 			gender = raw_input("Gender (M/F): ")
 		bdate = getDate("Date of birth (yyyy-mm-dd): ")
-		bplace = raw_input("Place of birth: ")
+		bplace = nonNullInput("Place of birth: ")
 		registerPerson(p1_fname, p1_lname, bdate, bplace) 
 
-	p2_fname = raw_input("Partner 2's first name: ")
-	p2_lname = raw_input("Partner 2's last name: ")
+	p2_fname = nonNullInput("Partner 2's first name: ")
+	p2_lname = nonNullInput("Partner 2's last name: ")
 	if not db.getPersonInfo(p2_fname, p2_lname):
 		print "Partner 2 is not in the database, please enter more info..."
-		gender = raw_input("Gender (M/F): ")
+		gender = nonNullInput("Gender (M/F): ")
 		while gender not in "mMfF" or len(gender) != 1:
-			gender = raw_input("Gender (M/F): ")
+			gender = nonNullInput("Gender (M/F): ")
 		bdate = getDate("Date of birth (yyyy-mm-dd): ")
-		bplace = raw_input("Place of birth: ")
+		bplace = nonNullInput("Place of birth: ")
 		registerPerson(p1_fname, p2_lname, bdate, bplace) 
 
 	# update the marriages table:
