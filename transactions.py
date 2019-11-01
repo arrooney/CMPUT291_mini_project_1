@@ -248,6 +248,21 @@ class Database(object):
 			return 0
 		return int(result[0]['numTickets'])
 
+
+	def getTicketTotalLast2(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT count(tno) as numTickets\
+		 		FROM tickets r, registrations t\
+				WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+				and vdate > date('now', '-2 year')", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0]['numTickets'])
+		except:
+			return 0
+		return int(result[0]['numTickets'])
+
 	
 	def getTicketInfo(self, fname, lname):
 		self.checkConn()
@@ -300,6 +315,17 @@ class Database(object):
 		self.checkConn()
 		c = self.conn.cursor()
 		c.execute("SELECT count(*) as allNotices FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0]['allNotices'])
+		except:
+			return 0
+		return int(result[0]['allNotices'])
+
+	def getDemeritCountLast2(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT count(*) as allNotices FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE and ddate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['allNotices'])

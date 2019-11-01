@@ -178,8 +178,10 @@ def getDriverAbstract():
 		fname = raw_input ("Enter the driver's first name: ")
 		lname = raw_input ("Enter the driver's last name: ")
 		person = db.getPersonInfo(fname, lname)
-	print "Number of tickets obtained in total:" ,(db.getTicketTotal(fname, lname))
-	print "Number of demerits obtained in total:" ,(db.getDemeritCount(fname, lname))
+	print "Number of tickets obtained in total:", (db.getTicketTotal(fname, lname))
+	print "Number of tickets obtained in the last 2 years:", (db.getTicketTotalLast2(fname, lname))
+	print "Number of demerits obtained in total:", (db.getDemeritCount(fname, lname))
+	print "Number of demerits obtained in the last 2 years:", 
 	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
 	tickNum = 1
@@ -197,8 +199,8 @@ def getDriverAbstract():
 		print "No tickets were found!"
 	else:
 		sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
+		clear()
 		for tickets in sub_list:
-			clear()
 			for ticket in tickets:
 				print ("")
 				print "Info for ticket", tickNum
@@ -206,19 +208,9 @@ def getDriverAbstract():
 				for k, v in ticket.iteritems():
 					print k, ":", v, ',',
 			print ("")
-<<<<<<< Updated upstream
 			raw_input("Press enter to see 5 more"),
-=======
-			print "Info for ticket", tickNum
-			tickNum+=1
-			for k, v in ticket.iteritems():
-				print k, ":", v, ',',
-			
-		print ("")
-		raw_input("Press enter to see 5 more"),
 
 
->>>>>>> Stashed changes
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"
