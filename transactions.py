@@ -252,13 +252,16 @@ class Database(object):
 	def getTicketInfo(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
+		c.execute("\
+		select t.tno, t.vdate, t.violation, t.fine, r.regno, v.make, v.model\
+		from tickets t, registrations r, vehicles v\
+		where t.regno = r.regno and v.vin = r.vin\
+		and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
-		try:
-			int(result[0][0])
-		except:
-			return 0
-		return int(result[0][0])
-
+		if result == []:
+			return False
+		else:
+			return result
 
 	def issueTicket(self, regno, fince, violation, vdate):
 		self.checkConn()
