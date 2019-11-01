@@ -313,13 +313,14 @@ def processPayment():
 
 def findCarOwner():
     prettyPrint("Find Car Owner")
-
+    print "Please supply the information..."
+ 
 	#taking input of the columns to search for
-    make_car = maybeNullInput("Enter make of the Car: ")
-    model_car = maybeNullInput("Enter model of the Car: ")
-    year_car = maybeNullInput("Enter year of the Car: ")
-    color_car = maybeNullInput("Enter color of the Car: ")
-    plate_car = maybeNullInput("Enter plate of the Car: ")
+    make_car = maybeNullInput("Enter the make of the Car: ")
+    model_car = maybeNullInput("Enter the model of the Car: ")
+    year_car = maybeNullInput("Enter the year of the Car: ")
+    color_car = maybeNullInput("Enter the color of the Car: ")
+    plate_car = maybeNullInput("Enter the plate of the Car: ")
     
     #calling function to get the result from the query
     cars = db.getCarInfoList(make_car, model_car, year_car, color_car, plate_car)
@@ -327,21 +328,20 @@ def findCarOwner():
     #getting the length of the list i.e all the results
     length_results = len(cars)
     
-    #selected_cars_list = []
-    
     #printing the results found on screen
     if length_results >= 4:
-        for i in range(length_results-1):
+        for i in range(length_results):
             
-            print "\nCar Number " + str(i+1)
+            print "\n\nCar Number " + str(i+1) + "\n"
             
             for key in cars[i]:
                 
-                if key == 'make' or key == 'model' or key == 'year' or key == 'color':
+                if key == 'make' or key == 'model' or key == 'year' or key == 'color' or key == 'vin':
 					print key + ":" + str(cars[i][key]),
+   
     
 	#nonNullInput("Please enter the ")
-    time.sleep(15)
+    time.sleep(30)
     
 
 
