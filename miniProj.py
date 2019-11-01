@@ -206,7 +206,19 @@ def getDriverAbstract():
 				for k, v in ticket.iteritems():
 					print k, ":", v, ',',
 			print ("")
+<<<<<<< Updated upstream
 			raw_input("Press enter to see 5 more"),
+=======
+			print "Info for ticket", tickNum
+			tickNum+=1
+			for k, v in ticket.iteritems():
+				print k, ":", v, ',',
+			
+		print ("")
+		raw_input("Press enter to see 5 more"),
+
+
+>>>>>>> Stashed changes
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"
@@ -280,8 +292,8 @@ def renewRegistration():
     
     #incrementing a year onto vehicle registration if registration has expired
     if is_expired:
-    	expiry = today + relativedelta(years=1)
-	print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
+		expiry = today + relativedelta(years=1)
+		print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
     else:
         expiry += relativedelta(years=1)
         print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
