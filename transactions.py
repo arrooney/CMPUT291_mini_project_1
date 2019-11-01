@@ -32,6 +32,7 @@ class Database(object):
 		# open a database connection
 		try:
 			self.conn = sqlite3.connect(self.path)
+			# add row factory function for ease of development
 			self.conn.row_factory = self.dictionary_factory
 		except Exception as e:
 			print('Error inside openConn(): ' + str(e))
@@ -156,6 +157,18 @@ class Database(object):
 			return result
 
 	
+	def getVehicleInfo(self, vin):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT * FROM vehicles WHERE vin=?", (vin,))
+		result = c.fetchall()
+
+		if result == []:
+			return False
+		else:
+			return result
+
+
 	""" get registration info from vin, fname and lname - this is a 
 	valid candidate key  """
 	def getVehicleRegByVIN(self, vin, fname, lname):
@@ -284,7 +297,6 @@ class Database(object):
 		c = self.conn.cursor()
 		c.execute("SELECT sum(amount) as totalAmount FROM payments WHERE tno=?", (tno,))
 		result = c.fetchall()
-		print result
 		try:
 			int(result[0]['totalAmount'])
 		except:
@@ -308,8 +320,8 @@ class Database(object):
 def main():
 	# test register births
 	db = Database("miniProj.db")
-	print db.getVehicleReg(30000)
-	db.getAmountPaid(400)
+	print db.getVehicleReg(300)
+	print db.getAmountPaid(400)
 	db.close()
 
 

@@ -53,13 +53,47 @@ def officerMainMenu():
 			# input is valid, continue
 			selection = int(menuSelect)
 			""" Main goal is to uncomment each of these """
-			# if selection == 1:
-			# 	issueTicket()
+			if selection == 1:
+				issueTicket()
 			# elif selection == 2:
 			# 	findCarOwner()
 			if selection == 3:
 				break
 	return
+
+
+def issueTicket():
+	prettyPrint("Issue a Ticket")
+	regno = raw_input("Enter registration number: ")
+	owner = db.getVehicleReg(regno)
+	while not owner:
+		print "Something went wrong, check the registration number..."
+		regno = raw_input("Enter registration number: ")
+		owner = db.getVehicleReg(regno)
+	owner = owner[0]
+	vin = owner['vin']
+	vehicleInfo = db.getVehicleInfo(vin)
+	while not vehicleInfo:
+		# vehicle listed under registration doesn't exist
+		print "Sorry! Something went wrong..."
+		return
+	vehicleInfo = vehicleInfo[0]
+	print "-- Owner Info --"
+	print "Given name: " + owner['fname'] + "\nSurname: " + owner['lname'] +\
+		"\nMake: " + vehicleInfo['make'] + "\nModel: " + vehicleInfo['model'] +\
+		"\nYear: " + str(vehicleInfo['year']) + "\nColour: " + vehicleInfo['color'] +\
+		"\nPlate: " + str(owner['plate'])
+	print "--	--	--"
+
+	# Validate selection
+	if raw_input("Is this correct? (Y/N) ") in "nN":
+		prettyPrint("Cancelled", 0.3)
+		return 
+	# this is the correct information, continue
+	clear()
+	vdate = getDate("Violation date (yyyy-mm-dd): ")
+	violation = raw_input("Violation info: ")
+	fine = numericInput("Amount: ")
 
 
 def processBOS():
@@ -181,6 +215,7 @@ def registerMarriage():
 
 
 def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None, phone=None):
+	# TODO: let values be null
 	if fname == None:
 		prettyPrint("Register a person")
 		fname = raw_input("Enter first name: ")
@@ -236,7 +271,7 @@ def processPayment():
 		print "Ticket Number not found..."
 		tno = raw_input("Ticket Number: ")
 		ticket = db.getTicketNumber(tno)
-	payment = raw_input("Please enter the amount to be paid: ")
+	payment = numericInput("Please enter the amount to be paid: ")
 	while int(payment) + db.getAmountPaid(tno) > db.getFineAmount(tno):
 		print "You have paid more than the fine amount, please try again"
 		payment = raw_input("Please enter the amount to be paid: ")
@@ -244,13 +279,19 @@ def processPayment():
 
 
 def getDate(prompt):
-    
-    #check for date validity
-    
+    # TODO: check for date semantics
 	bdate = raw_input(prompt)
 	while not re.search("^[0-9]{4,}-[0-9]{2,}-[0-9]{2,}$", bdate):
 		bdate = raw_input(prompt)
 	return bdate
+
+
+def numericInput(prompt):
+	# validate numeric input
+	numeric = raw_input(prompt)
+	while not re.search("^[0-9]+.?[0-9]*$", numeric):
+		numeric = raw_input(prompt)
+	return numeric
 
 
 def passwordAuth():
@@ -276,6 +317,7 @@ def passwordAuth():
 
 
 def prettyPrint(output, timeout=0):
+	# output a nice header, with an optional timeout parameter
 	clear()
 	print "====================================="
 	print "\t" + output
@@ -298,20 +340,25 @@ def getch():
 
 
 def receiveSignal(signalNumber, frame):
+	# handle a ^C signal - this puts the user back at the sign in screen
     prettyPrint("Cancelled", 0.3)
     os.execl(sys.executable, sys.executable, *sys.argv)
     return
 
 
 def main():
+	# validate database file, and disbatch based on user type
+	numericInput("asdf")
 	if len(sys.argv) < 2 or not os.path.isfile(sys.argv[1]):
 		print "Please supply valid database file name!"
 		return
 
 	global db
 	db = Database(sys.argv[1])
+	# validate the user
 	passwordAuth()
-	prettyPrint("Welcome, " + users['uid'], 0.5)
+	# to get here, user has signed in successfully
+	prettyPrint("Welcome, " + users['uid'] + " (" + users['fname'] + " "  + users['lname'] + ")", 0.5)
 	userType = users['utype']
 	if userType == 'a':
 		# user is an agent
@@ -320,8 +367,9 @@ def main():
 		# user is an officer
 		officerMainMenu()
 	else:
-		prettyPrint("Something went wrong: invalid user type", 1)
+		prettyPrint("Something went wrong: invalid user type '" + userType + "'" , 1)
 
+	# transactions finished, close DB
 	db.close()
 	return
 
