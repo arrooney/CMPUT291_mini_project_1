@@ -183,16 +183,22 @@ def getDriverAbstract():
 	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
 	tickNum = 1
-	for row in db.getTicketInfo(fname, lname):
-		print ""
-		print "Info for ticket", tickNum
-		tickNum += 1
-		for k, v in row.iteritems():
-			print k, ':', v, ",",
-	print ""
-	while True:
-		raw_input("Press enter to see more")
-
+	viewChoice = raw_input("Would you like to view the tickets ordered by date? (y/n)")
+	if viewChoice == 'n':
+		tickets = db.getTicketInfo(fname, lname)
+	elif viewChoice == 'y':
+		tickets = db.getTicketInfoOrdered(fname, lname)
+	sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
+	for tickets in sub_list:
+		for ticket in tickets:
+			print ("")
+			print "Info for ticket", tickNum
+			tickNum+=1
+			for k, v in ticket.iteritems():
+				print k, ":", v, ',',
+			
+		print ("")
+		raw_input("Press enter to see 5 more"),
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"

@@ -262,6 +262,20 @@ class Database(object):
 			return False
 		else:
 			return result
+	def getTicketInfoOrdered(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("\
+		select t.tno, t.vdate, t.violation, t.fine, r.regno, v.make, v.model\
+		from tickets t, registrations r, vehicles v\
+		where t.regno = r.regno and v.vin = r.vin\
+		and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+		order by t.vdate", (fname, lname))
+		result = c.fetchall()
+		if result == []:
+			return False
+		else:
+			return result
 
 	def issueTicket(self, regno, fine, violation, vdate):
 		self.checkConn()
