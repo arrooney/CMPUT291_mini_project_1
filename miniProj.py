@@ -94,7 +94,7 @@ def issueTicket():
 	vdate = getDate("Violation date (yyyy-mm-dd): ")
 	violation = raw_input("Violation info: ")
 	fine = numericInput("Amount: ")
-	if db.issueTicket(regno, fince, violation, vdate):
+	if db.issueTicket(regno, fine, violation, vdate):
 		prettyPrint("Success", 0.3)
 	return
 
