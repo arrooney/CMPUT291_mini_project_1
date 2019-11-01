@@ -430,14 +430,9 @@ class Database(object):
 		c.execute(fullQuery, tuple(valuesList))
       	
 		result = c.fetchall()
-		print result
-		
-		
-	
-	def getCarOwner(self, make, model, year, color, plate):
-		self.checkConn()
-		c = self.conn.cursor()
-		c.execute("select fname, lname from make, model, year, color, plate where ")
+  
+		return result
+
 
 """ main for testing purposes """
 def main():
@@ -445,7 +440,7 @@ def main():
 	db = Database("miniProj.db")
 	#print db.getVehicleReg(300)
 	#print db.getAmountPaid(400)
-	db.getCarInfoList(make="Chevrolet", color='red')
+	#db.getCarInfoList(make="Chevrolet", color='red')
 	db.close()
 
 

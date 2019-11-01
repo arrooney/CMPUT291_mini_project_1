@@ -48,15 +48,15 @@ def officerMainMenu():
 		if not menuSelect.isdigit():
 			print "Please choose a number from the menu:"
 		elif int(menuSelect) < 1 or int(menuSelect) > 3:
-			print "please select a number 1-7"
+			print "Please select a number 1-7"
 		else:
 			# input is valid, continue
 			selection = int(menuSelect)
 			""" Main goal is to uncomment each of these """
 			if selection == 1:
 				issueTicket()
-			# elif selection == 2:
-			# 	findCarOwner()
+			elif selection == 2:
+			 	findCarOwner()
 			if selection == 3:
 				break
 	return
@@ -309,6 +309,40 @@ def processPayment():
 		print "You have paid more than the fine amount, please try again"
 		payment = raw_input("Please enter the amount to be paid: ")
 	db.processPayment(tno, date.today(), payment)
+
+
+def findCarOwner():
+    prettyPrint("Find Car Owner")
+
+	#taking input of the columns to search for
+    make_car = maybeNullInput("Enter make of the Car: ")
+    model_car = maybeNullInput("Enter model of the Car: ")
+    year_car = maybeNullInput("Enter year of the Car: ")
+    color_car = maybeNullInput("Enter color of the Car: ")
+    plate_car = maybeNullInput("Enter plate of the Car: ")
+    
+    #calling function to get the result from the query
+    cars = db.getCarInfoList(make_car, model_car, year_car, color_car, plate_car)
+    
+    #getting the length of the list i.e all the results
+    length_results = len(cars)
+    
+    #selected_cars_list = []
+    
+    #printing the results found on screen
+    if length_results >= 4:
+        for i in range(length_results-1):
+            
+            print "\nCar Number " + str(i+1)
+            
+            for key in cars[i]:
+                
+                if key == 'make' or key == 'model' or key == 'year' or key == 'color':
+					print key + ":" + str(cars[i][key]),
+    
+	#nonNullInput("Please enter the ")
+    time.sleep(15)
+    
 
 
 def getDate(prompt):
