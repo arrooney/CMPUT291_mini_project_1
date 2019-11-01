@@ -188,17 +188,20 @@ def getDriverAbstract():
 		tickets = db.getTicketInfo(fname, lname)
 	elif viewChoice == 'y':
 		tickets = db.getTicketInfoOrdered(fname, lname)
-	sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
-	for tickets in sub_list:
-		for ticket in tickets:
+	if not db.getTicketInfo(fname, lname):
+		print "No tickets were found!"
+	else:
+		sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
+		for tickets in sub_list:
+			for ticket in tickets:
+				print ("")
+				print "Info for ticket", tickNum
+				tickNum+=1
+				for k, v in ticket.iteritems():
+					print k, ":", v, ',',
+				
 			print ("")
-			print "Info for ticket", tickNum
-			tickNum+=1
-			for k, v in ticket.iteritems():
-				print k, ":", v, ',',
-			
-		print ("")
-		raw_input("Press enter to see 5 more"),
+			raw_input("Press enter to see 5 more"),
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"
