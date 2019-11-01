@@ -81,8 +81,8 @@ class Database(object):
 			print "One of these parents aren't registered"
 			return False
 		
-		c.execute("SELECT max(births.regno) from births")
-		result = c.fetchone()[0]
+		c.execute("SELECT max(births.regno) as maxReg from births")
+		result = c.fetchone()['maxReg']
 		regno = 0 if (result == None) else int(result) + 1
 		# insert the values
 		
@@ -104,8 +104,8 @@ class Database(object):
 			print "One of these partners aren't registered"
 			return False
 		
-		c.execute("SELECT max(marriages.regno) from marriages")
-		result = c.fetchone()[0]
+		c.execute("SELECT max(marriages.regno) as maxReg from marriages")
+		result = c.fetchone()['maxReg']
 		regno = 0 if (result == None) else int(result) + 1
 		# insert the values
 		
@@ -189,8 +189,8 @@ class Database(object):
 		self.checkConn()
 		c = self.conn.cursor()
 		try:
-			c.execute("SELECT max(registrations.regno) from registrations")
-			result = c.fetchone()[0]
+			c.execute("SELECT max(registrations.regno) as maxReg from registrations")
+			result = c.fetchone()['maxReg']
 			regno = 0 if (result == None) else int(result) + 1
 			c.execute("INSERT INTO registrations VALUES (?,?,?,?,?,?,?)",\
 				(regno, regdate, expiry, plate, vin, fname, lname))
@@ -260,14 +260,15 @@ class Database(object):
 		return int(result[0][0])
 
 
-	def issueTicket(self, regno, fince, violation, vdate):
+	def issueTicket(self, regno, fine, violation, vdate):
 		self.checkConn()
 		c = self.conn.cursor()
 		try:
 			# get new ticket key
 			# this will always be the max (see proof by contradiction)
-			c.execute("SELECT max(tno) from tickets")
-			result = c.fetchone()[0]
+			c.execute("SELECT max(tno) as maxTno from tickets")
+			result = c.fetchone()['maxTno']
+			print result
 			tno = 0 if (result == None) else int(result) + 1
 			c.execute("INSERT INTO tickets VALUES (?,?,?,?,?)",\
 				(tno, regno, fine, violation, vdate))
@@ -340,10 +341,11 @@ class Database(object):
 
 """ main for testing purposes """
 def main():
-	# test register births
+	# test register births regno, fine, violation, vdate
 	db = Database("miniProj.db")
 	print db.getVehicleReg(300)
 	print db.getAmountPaid(400)
+	db.issueTicket(300, 300, 'cray', '1000-09-09')
 	db.close()
 
 
