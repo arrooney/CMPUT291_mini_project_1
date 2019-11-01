@@ -268,7 +268,6 @@ class Database(object):
 			# this will always be the max (see proof by contradiction)
 			c.execute("SELECT max(tno) as maxTno from tickets")
 			result = c.fetchone()['maxTno']
-			print result
 			tno = 0 if (result == None) else int(result) + 1
 			c.execute("INSERT INTO tickets VALUES (?,?,?,?,?)",\
 				(tno, regno, fine, violation, vdate))
@@ -345,7 +344,6 @@ def main():
 	db = Database("miniProj.db")
 	print db.getVehicleReg(300)
 	print db.getAmountPaid(400)
-	db.issueTicket(300, 300, 'cray', '1000-09-09')
 	db.close()
 
 
