@@ -240,7 +240,10 @@ class Database(object):
 	def getTicketTotal(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(tno) as numTickets FROM tickets r, registrations t WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("\
+		SELECT count(tno) as numTickets\
+		FROM tickets r, registrations t WHERE r.regno = t.regno\
+		and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['numTickets'])
@@ -252,10 +255,11 @@ class Database(object):
 	def getTicketTotalLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(tno) as numTickets\
-		 		FROM tickets r, registrations t\
-				WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
-				and vdate > date('now', '-2 year')", (fname, lname))
+		c.execute("\
+		SELECT count(tno) as numTickets\
+		FROM tickets r, registrations t\
+		WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+		and vdate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['numTickets'])
@@ -314,7 +318,10 @@ class Database(object):
 	def getDemeritCount(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(*) as allNotices FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("\
+		SELECT count(*) as allNotices\
+		FROM demeritNotices\
+		WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['allNotices'])
@@ -325,7 +332,11 @@ class Database(object):
 	def getDemeritCountLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(*) as allNotices FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE and ddate > date('now', '-2 year')", (fname, lname))
+		c.execute("\
+		SELECT count(*) as allNotices\
+		FROM demeritNotices\
+		WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+		and ddate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['allNotices'])
@@ -337,7 +348,9 @@ class Database(object):
 	def getDemeritPoints(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT sum(points) as totalPoints FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("\
+		SELECT sum(points) as totalPoints\
+		FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['totalPoints'])
@@ -349,7 +362,10 @@ class Database(object):
 	def getDemeritPointsLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT sum(points) as totalPoints FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE and ddate > date('now', '-2 year')", (fname, lname))
+		c.execute("\
+		SELECT sum(points) as totalPoints\
+		FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+		and ddate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['totalPoints'])

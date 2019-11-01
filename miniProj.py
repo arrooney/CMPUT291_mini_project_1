@@ -181,7 +181,7 @@ def getDriverAbstract():
 	print "Number of tickets obtained in total:", (db.getTicketTotal(fname, lname))
 	print "Number of tickets obtained in the last 2 years:", (db.getTicketTotalLast2(fname, lname))
 	print "Number of demerits obtained in total:", (db.getDemeritCount(fname, lname))
-	print "Number of demerits obtained in the last 2 years:", 
+	print "Number of demerits obtained in the last 2 years:", (db.getDemeritCountLast2(fname, lname))
 	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
 	tickNum = 1
