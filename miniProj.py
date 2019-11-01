@@ -184,10 +184,15 @@ def getDriverAbstract():
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
 	tickNum = 1
 	viewChoice = raw_input("Would you like to view the tickets ordered by date? (y/n)")
-	if viewChoice == 'n':
-		tickets = db.getTicketInfo(fname, lname)
-	elif viewChoice == 'y':
-		tickets = db.getTicketInfoOrdered(fname, lname)
+	while True:
+		if viewChoice == 'n':
+			tickets = db.getTicketInfo(fname, lname)
+			break
+		elif viewChoice == 'y':
+			tickets = db.getTicketInfoOrdered(fname, lname)
+			break
+		else:
+			viewChoice = raw_input("Please enter y or n!")
 	if not db.getTicketInfo(fname, lname):
 		print "No tickets were found!"
 	else:
