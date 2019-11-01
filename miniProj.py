@@ -94,6 +94,9 @@ def issueTicket():
 	vdate = getDate("Violation date (yyyy-mm-dd): ")
 	violation = raw_input("Violation info: ")
 	fine = numericInput("Amount: ")
+	if db.issueTicket(regno, fince, violation, vdate):
+		prettyPrint("Success", 0.3)
+	return
 
 
 def processBOS():
@@ -348,7 +351,6 @@ def receiveSignal(signalNumber, frame):
 
 def main():
 	# validate database file, and disbatch based on user type
-	numericInput("asdf")
 	if len(sys.argv) < 2 or not os.path.isfile(sys.argv[1]):
 		print "Please supply valid database file name!"
 		return

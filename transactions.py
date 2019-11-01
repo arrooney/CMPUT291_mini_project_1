@@ -259,6 +259,25 @@ class Database(object):
 			return 0
 		return int(result[0][0])
 
+
+	def issueTicket(self, regno, fince, violation, vdate):
+		self.checkConn()
+		c = self.conn.cursor()
+		try:
+			# get new ticket key
+			# this will always be the max (see proof by contradiction)
+			c.execute("SELECT max(tno) from tickets")
+			result = c.fetchone()[0]
+			tno = 0 if (result == None) else int(result) + 1
+			c.execute("INSERT INTO tickets VALUES (?,?,?,?,?)",\
+				(tno, regno, fine, violation, vdate))
+			self.conn.commit()
+		except Exception as e:
+			print('Error inside issueTicket(): ' + str(e))
+			return False
+		return True
+
+
 	def getDemeritCount(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -269,6 +288,7 @@ class Database(object):
 		except:
 			return 0
 		return int(result[0]['allNotices'])
+
 
 	def getDemeritPoints(self, fname, lname):
 		self.checkConn()
@@ -281,6 +301,7 @@ class Database(object):
 			return 0
 		return int(result[0]['totalPoints'])
 
+
 	def getDemeritPointsLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -291,6 +312,7 @@ class Database(object):
 		except:
 			return 0
 		return int(result[0]['totalPoints'])
+
 
 	def getAmountPaid(self, tno):
 		self.checkConn()
