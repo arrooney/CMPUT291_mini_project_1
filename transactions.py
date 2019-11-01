@@ -240,7 +240,26 @@ class Database(object):
 	def getTicketTotal(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(tno) as numTickets FROM tickets r, registrations t WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("\
+		SELECT count(tno) as numTickets\
+		FROM tickets r, registrations t WHERE r.regno = t.regno\
+		and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0]['numTickets'])
+		except:
+			return 0
+		return int(result[0]['numTickets'])
+
+
+	def getTicketTotalLast2(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("\
+		SELECT count(tno) as numTickets\
+		FROM tickets r, registrations t\
+		WHERE r.regno = t.regno and fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+		and vdate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['numTickets'])
@@ -299,7 +318,25 @@ class Database(object):
 	def getDemeritCount(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT count(*) as allNotices FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("\
+		SELECT count(*) as allNotices\
+		FROM demeritNotices\
+		WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		result = c.fetchall()
+		try:
+			int(result[0]['allNotices'])
+		except:
+			return 0
+		return int(result[0]['allNotices'])
+
+	def getDemeritCountLast2(self, fname, lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("\
+		SELECT count(*) as allNotices\
+		FROM demeritNotices\
+		WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+		and ddate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['allNotices'])
@@ -311,7 +348,9 @@ class Database(object):
 	def getDemeritPoints(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT sum(points) as totalPoints FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
+		c.execute("\
+		SELECT sum(points) as totalPoints\
+		FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['totalPoints'])
@@ -323,7 +362,10 @@ class Database(object):
 	def getDemeritPointsLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT sum(points) as totalPoints FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE and ddate > date('now', '-2 year')", (fname, lname))
+		c.execute("\
+		SELECT sum(points) as totalPoints\
+		FROM demeritNotices WHERE fname = ? COLLATE NOCASE and lname = ? COLLATE NOCASE\
+		and ddate > date('now', '-2 year')", (fname, lname))
 		result = c.fetchall()
 		try:
 			int(result[0]['totalPoints'])
@@ -341,7 +383,7 @@ class Database(object):
 			int(result[0]['totalAmount'])
 		except:
 			return 0
-		return int(result[0]['totalPoints'])
+		return int(result[0]['totalAmount'])
 
 
 	def getFineAmount(self, tno):
@@ -355,13 +397,55 @@ class Database(object):
 			return 0
 		return int(result[0]['fine'])
 
+	
+	def getCarInfoList(self, make = None, model = None, year = None, color = None, plate = None):
+		self.checkConn()
+		c = self.conn.cursor()
+		query = "SELECT * FROM vehicles v left outer join registrations r on r.vin = v.vin WHERE "
+		values = []
+		valuesList = []
+		if make != None:
+			values.append("v.make=?")
+			valuesList.append(make)
+		if model != None:
+			values.append("v.model=?")
+			valuesList.append(model)
+		if year != None:
+			values.append("v.year=?")
+			valuesList.append(year)
+		if color != None:
+			values.append("v.color=?")
+			valuesList.append(color)
+		if plate != None:
+			values.append("r.plate=?")
+			valuesList.append(plate)
+		separator = " and "
+	  	queryString = separator.join(values)
+    
+		if values == []:
+			print "Please provide arguments"
+			return
+
+		fullQuery = query + queryString
+		c.execute(fullQuery, tuple(valuesList))
+      	
+		result = c.fetchall()
+		print result
+		
+		
+	
+	def getCarOwner(self, make, model, year, color, plate):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("select fname, lname from make, model, year, color, plate where ")
 
 """ main for testing purposes """
 def main():
 	# test register births regno, fine, violation, vdate
 	db = Database("miniProj.db")
-	print db.getVehicleReg(300)
-	print db.getAmountPaid(400)
+	#print db.getVehicleReg(300)
+	#print db.getAmountPaid(400)
+	db.getCarInfoList(make="Chevrolet", color='red')
 	db.close()
 
 
