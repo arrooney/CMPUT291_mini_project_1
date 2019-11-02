@@ -11,7 +11,7 @@ clear = lambda: os.system('clear')
 
 
 def registryMainMenu():
-	# main menu for a registry agent
+	# main menu for a registry agen
 	while True:
 		prettyPrint("Select an action:")
 		menuSelect = raw_input("[1] Register a birth\n[2] Register a marriage\n[3] Renew a vehicle registration\n[4] Process a bill of sale\n[5] Process a payment\n[6] Get a driver abstract\n[7] Quit\n->")
