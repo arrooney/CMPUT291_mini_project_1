@@ -140,6 +140,9 @@ def registerBirth():
 	print "Please supply the information...\n"
 	fname = nonNullInput("Baby's given name: ")
 	lname = nonNullInput("Baby's surname: ")
+	if db.getPersonInfo(fname, lname):
+		prettyPrint("This person already exists", 0.5)
+		return
 	gender = raw_input("Gender (M/F): ")
 	while gender not in "mMfF" or len(gender) != 1:
 		gender = raw_input("Gender (M/F): ")
@@ -159,8 +162,7 @@ def registerBirth():
 	# We should have mother info now!
 	motherInfo = db.getPersonInfo(m_fname, m_lname)[0]
 	# update the persons table - give baby same phone and address of mother
-	if not db.getPersonInfo(fname, lname):
-		registerPerson(fname, lname, bdate, bplace, motherInfo['address'], motherInfo['phone'])
+	registerPerson(fname, lname, bdate, bplace, motherInfo['address'], motherInfo['phone'], acceptNull=True)
 	# update the births table:
 	regdate = date.today()
 	regplace = users['city'] # location of user
@@ -240,23 +242,23 @@ def registerMarriage():
 	regdate = date.today()
 	regplace = users['city'] # location of user
 	db.registerMarriage(regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
-	prettyPrint("Success", 0.3)
+	prettyPrint("Success", 0.5)
 
 
-def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None, phone=None):
+def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None, phone=None, acceptNull=False):
 	# TODO: let values be null
-	if fname == None:
+	if fname == None and not acceptNull:
 		prettyPrint("Register a person")
 		fname = nonNullInput("Enter first name: ")
-	if lname == None:
+	if lname == None and not acceptNull:
 		lname = nonNullInput("Enter last name: ")
-	if bdate == None:
+	if bdate == None and not acceptNull:
 		bdate = getDate("Date of birth: ")
-	if bplace == None:
+	if bplace == None and not acceptNull:
 		bplace = maybeNullInput("Place of birth: ")
-	if address == None:
+	if address == None and not acceptNull:
 		address = maybeNullInput("Address: ")
-	if phone == None:
+	if phone == None and not acceptNull:
 		phone = maybeNullInput("Phone: ")
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
 
