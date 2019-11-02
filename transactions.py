@@ -19,7 +19,7 @@ class Database(object):
 		self.path = dbfile
 
 
-	def dictionary_factory(self, cursor, row):
+	def __dictionary_factory__(self, cursor, row):
 		# From lab notes - credit goes to TA's
 		dict = {}
 		for i, col in enumerate(cursor.description):
@@ -28,20 +28,20 @@ class Database(object):
 
 
 	""" Open the connection to the database file at <path> """
-	def openConn(self):
+	def __openConn__(self):
 		# open a database connection
 		try:
 			self.conn = sqlite3.connect(self.path)
 			# add row factory function for ease of development
-			self.conn.row_factory = self.dictionary_factory
+			self.conn.row_factory = self.__dictionary_factory__
 		except Exception as e:
-			print('Error inside openConn(): ' + str(e))
+			print('Error inside __openConn__(): ' + str(e))
 
 
 	""" Check that the connection is still valid """
 	def checkConn(self):
 		if self.conn == None:
-			self.openConn()
+			self.__openConn__()
 
 
 	""" Close the connection at the end of the program """
