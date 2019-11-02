@@ -321,7 +321,9 @@ def findCarOwner():
     year_car = maybeNullInput("Enter the year of the Car: ")
     color_car = maybeNullInput("Enter the color of the Car: ")
     plate_car = maybeNullInput("Enter the plate of the Car: ")
-    
+    if make_car == None and model_car == None and year_car == None and color_car == None and plate_car == None:
+    		prettyPrint("No information provided", 0.5)
+    		return
     #calling function to get the result from the query
     cars = db.getCarInfoList(make_car, model_car, year_car, color_car, plate_car)
     
