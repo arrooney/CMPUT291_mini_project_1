@@ -93,7 +93,7 @@ def issueTicket():
 	clear()
 	vdate = getDate("Violation date (yyyy-mm-dd): ")
 	violation = raw_input("Violation info: ")
-	fine = numericInput("Amount: ")
+	fine = numericInputRadix("Amount: ")
 	if db.issueTicket(regno, fine, violation, vdate):
 		# otherwise something went wrong, hard to know what
 		prettyPrint("Success", 0.3)
@@ -216,31 +216,25 @@ def getDriverAbstract():
 def registerMarriage():
 	prettyPrint("Register a marriage")
 	print "Please input the partners...\n"
+	# get partner one details...
 	p1_fname = nonNullInput("Partner 1's first name: ")
 	p1_lname = nonNullInput("Partner 1's last name: ")
 	if not db.getPersonInfo(p1_fname, p1_lname):
 		print "Partner 1 is not in the database, please enter more info..."
-		gender = raw_input("Gender (M/F): ")
-		while gender not in "mMfF" or len(gender) != 1:
-			gender = raw_input("Gender (M/F): ")
-		bdate = getDate("Date of birth (yyyy-mm-dd): ")
-		bplace = nonNullInput("Place of birth: ")
-		registerPerson(p1_fname, p1_lname, bdate, bplace) 
-
+		registerPerson(p1_fname, p1_lname) 
+	# get partner 2 details...
 	p2_fname = nonNullInput("Partner 2's first name: ")
 	p2_lname = nonNullInput("Partner 2's last name: ")
 	if not db.getPersonInfo(p2_fname, p2_lname):
 		print "Partner 2 is not in the database, please enter more info..."
-		gender = nonNullInput("Gender (M/F): ")
-		while gender not in "mMfF" or len(gender) != 1:
-			gender = nonNullInput("Gender (M/F): ")
-		bdate = getDate("Date of birth (yyyy-mm-dd): ")
-		bplace = nonNullInput("Place of birth: ")
-		registerPerson(p1_fname, p2_lname, bdate, bplace) 
+		registerPerson(p2_fname, p2_lname) 
 
 	# update the marriages table:
 	regdate = date.today()
 	regplace = users['city'] # location of user
+	if db.getMarriageInfo(p1_fname, p1_lname, p2_fname, p2_lname):
+		prettyPrint("Union already exists", 0.5)
+		return
 	db.registerMarriage(regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
 	prettyPrint("Success", 0.5)
 
@@ -259,7 +253,7 @@ def registerPerson(fname=None, lname=None, bdate=None, bplace=None, address=None
 	if address == None and not acceptNull:
 		address = maybeNullInput("Address: ")
 	if phone == None and not acceptNull:
-		phone = maybeNullInput("Phone: ")
+		phone = phoneInput("Phone: ")
 	db.setPersonInfo(fname, lname, bdate, bplace, address, phone)
 
 
@@ -306,7 +300,7 @@ def processPayment():
 		print "Ticket Number not found..."
 		tno = raw_input("Ticket Number: ")
 		ticket = db.getTicketNumber(tno)
-	payment = numericInput("Please enter the amount to be paid: ")
+	payment = numericInputRadix("Please enter the amount to be paid: ")
 	while int(payment) + db.getAmountPaid(tno) > db.getFineAmount(tno):
 		print "You have paid more than the fine amount, please try again"
 		payment = raw_input("Please enter the amount to be paid: ")
@@ -360,17 +354,30 @@ def getDate(prompt):
 	return bdate
 
 
-def numericInput(prompt):
-	# validate numeric input
+def numericInputRadix(prompt):
+	# validate numeric input with decimal point
 	numeric = raw_input(prompt)
 	while not re.search("^[0-9]+.?[0-9]*$", numeric):
 		numeric = raw_input(prompt)
 	return numeric
 
 
+def phoneInput(prompt):
+	# validate a phone number with some regex
+	# it can, in general, be null
+	phone = raw_input(prompt)
+	if phone == "":
+		phone = None
+		return phone
+	while not re.search("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$", phone):
+		phone = raw_input(prompt)
+	return phone
+
+
 def nonNullInput(prompt):
 	# enforce that something (anything) be input
 	inp = raw_input(prompt)
+
 	while inp == "":
 		print "Please provide input"
 		inp = raw_input(prompt)

@@ -103,19 +103,34 @@ class Database(object):
 			# Ethier partner does not exist in this case, the user needs to give the information
 			print "One of these partners aren't registered"
 			return False
-		
-		c.execute("SELECT max(marriages.regno) as maxReg from marriages")
-		result = c.fetchone()['maxReg']
-		regno = 0 if (result == None) else int(result) + 1
-		# insert the values
-		
-		c.execute("INSERT INTO marriages VALUES(?,?,?,?,?,?,?)",\
-			(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))
-		result = c.fetchone()
+		try:
+			c.execute("SELECT max(marriages.regno) as maxReg from marriages")
+			result = c.fetchone()['maxReg']
+			regno = 0 if (result == None) else int(result) + 1
+			# insert the values
+			
+			c.execute("INSERT INTO marriages VALUES(?,?,?,?,?,?,?)",\
+				(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))
+			result = c.fetchone()
 
-		# close connection
-		self.conn.commit()
+			# close connection
+			self.conn.commit()
+		except Exception as e:
+			print('Error inside registerMarriage(): ' + str(e))
 		return True
+
+
+	def getMarriageInfo(self, p1_fname, p1_lname, p2_fname, p2_lname):
+		self.checkConn()
+		c = self.conn.cursor()
+		c.execute("SELECT * FROM marriages WHERE (p1_fname=? COLLATE NOCASE AND p1_lname=? COLLATE NOCASE AND p2_fname=? COLLATE NOCASE AND p2_lname=? COLLATE NOCASE)\
+			OR (p2_fname=? COLLATE NOCASE AND p2_lname=? COLLATE NOCASE AND p1_fname=? COLLATE NOCASE AND p1_lname=? COLLATE NOCASE)",\
+			(p1_fname, p1_lname, p2_fname, p2_lname, p1_fname, p1_lname, p2_fname, p2_lname))
+		result = c.fetchall()
+
+		if result == []:
+			return False
+		else: return result
 
 
 	""" Add a new person to the DB """
