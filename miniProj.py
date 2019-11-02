@@ -105,15 +105,15 @@ def processBOS():
 	vin = nonNullInput("Enter vehicle VIN: ")
 	o_fname = nonNullInput("Current owner given name: ")
 	o_lname = nonNullInput("Current owner surname: ")
-	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
+	vehicle = db.getVehicleRegByVIN(vin)
 
-	while not vehicle:
-		print "Owner does not match VIN..."
+	while not vehicle or not (vehicle[0]['fname'].lower() == o_fname.lower() and vehicle[0]['lname'].lower() == o_lname.lower()):
+		print "This is not the most recent owner of this vehicle..."
 		vin = nonNullInput("Enter vehicle VIN: ")
 		o_fname = nonNullInput("Current owner given name: ")
 		o_lname = nonNullInput("Current owner surname: ")
-		vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)
-	vehicle = db.getVehicleRegByVIN(vin, o_fname, o_lname)[0]
+		vehicle = db.getVehicleRegByVIN(vin)
+	vehicle = vehicle[0]
 
 	# set the current registration of the vehicle to expire today
 	regno = vehicle['regno']
@@ -121,6 +121,10 @@ def processBOS():
 	db.setRegistrationExpiry(regno, datetime.date(datetime.now()))
 	p_fname = nonNullInput("Purchaser given name: ")
 	p_lname = nonNullInput("Purchaser surname: ")
+	while not db.getPersonInfo(p_fname, p_lname):
+		print "Purchaser is not in the system, try again..."
+		p_fname = nonNullInput("Purchaser given name: ")
+		p_lname = nonNullInput("Purchaser surname: ")
 	plate = nonNullInput("New license plate: ")
 
 	# create new registration with new name, same old VIN

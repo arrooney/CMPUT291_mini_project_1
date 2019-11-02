@@ -184,13 +184,12 @@ class Database(object):
 			return result
 
 
-	""" get registration info from vin, fname and lname - this is a 
-	valid candidate key  """
-	def getVehicleRegByVIN(self, vin, fname, lname):
+	""" get registration info from vin output sorted by date """
+	def getVehicleRegByVIN(self, vin):
 		self.checkConn()
 		c = self.conn.cursor()
-		c.execute("SELECT * FROM registrations WHERE vin=? COLLATE NOCASE AND fname=? COLLATE NOCASE AND lname=? COLLATE NOCASE",\
-			(vin, fname, lname))
+		c.execute("SELECT * FROM registrations WHERE vin=? COLLATE NOCASE ORDER BY date(regdate) DESC",\
+			(vin,))
 		result = c.fetchall()
 
 		if result == []:
@@ -461,6 +460,7 @@ class Database(object):
 def main():
 	# test register births regno, fine, violation, vdate
 	db = Database("miniProj.db")
+	print db.getVehicleRegByVIN("U508")
 	#print db.getVehicleReg(300)
 	#print db.getAmountPaid(400)
 	#db.getCarInfoList(make="Chevrolet")
