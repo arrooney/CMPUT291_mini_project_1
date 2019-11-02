@@ -261,7 +261,7 @@ def renewRegistration():
     #Input of registraion number for vehicle
     prettyPrint("Renew a Registration")
     print "Please supply the information..."
-    regno = raw_input("Registration Number of Vehicle: ")
+    regno = integerInput("Registration Number of Vehicle: ")
     ticket = db.getVehicleReg(regno)
     while not db.getVehicleReg(regno):
         print "Vehicle Registration Number not found..."
@@ -286,10 +286,9 @@ def renewRegistration():
 
     #updating registration expiry
     db.setRegistrationExpiry(regno, expiry)
-    
-    print "Your Vehicle Registration Expiry Date is " + str(expiry) + "."
-    
-    time.sleep(5)
+    prettyPrint("success")
+    print "Your new vehicle registration expiry date is " + str(expiry) + "."
+    time.sleep(1)
 
 
 def processPayment():
@@ -372,6 +371,13 @@ def phoneInput(prompt):
 	while not re.search("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$", phone):
 		phone = raw_input(prompt)
 	return phone
+
+
+def integerInput(prompt):
+	integer = raw_input(prompt)
+	while not re.search("^[0-9]+$", integer):
+		integer = raw_input(prompt)
+	return integer
 
 
 def nonNullInput(prompt):
