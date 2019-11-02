@@ -401,43 +401,46 @@ class Database(object):
 	def getCarInfoList(self, make = None, model = None, year = None, color = None, plate = None):
 		self.checkConn()
 		c = self.conn.cursor()
-		query = "SELECT * FROM vehicles v left outer join registrations r on r.vin = v.vin WHERE "
+
+		#query string to select all attributes of the car
+		query = "SELECT * FROM vehicles left outer join registrations using (vin) WHERE "
+
 		values = []
 		valuesList = []
 		if make != None:
-			values.append("v.make=?")
+			values.append("make=?")
 			valuesList.append(make)
 		if model != None:
-			values.append("v.model=?")
+			values.append("model=?")
 			valuesList.append(model)
 		if year != None:
-			values.append("v.year=?")
+			values.append("year=?")
 			valuesList.append(year)
 		if color != None:
-			values.append("v.color=?")
+			values.append("color=?")
 			valuesList.append(color)
 		if plate != None:
-			values.append("r.plate=?")
+			values.append("plate=?")
 			valuesList.append(plate)
 		separator = " and "
 	  	queryString = separator.join(values)
-    
+
+		#checking if any arguments are empty
 		if values == []:
 			print "Please provide arguments"
 			return
 
-		fullQuery = query + queryString
+		#joining queries and where clauses with a group by key clause
+		fullQuery = query + queryString + "GROUP BY VIN"
+		
+		#executing the query
 		c.execute(fullQuery, tuple(valuesList))
       	
+		#fetching the query results
 		result = c.fetchall()
-		print result
-		
-		
-	
-	def getCarOwner(self, make, model, year, color, plate):
-		self.checkConn()
-		c = self.conn.cursor()
-		c.execute("select fname, lname from make, model, year, color, plate where ")
+  
+		return result
+
 
 """ main for testing purposes """
 def main():
@@ -445,7 +448,7 @@ def main():
 	db = Database("miniProj.db")
 	#print db.getVehicleReg(300)
 	#print db.getAmountPaid(400)
-	db.getCarInfoList(make="Chevrolet", color='red')
+	#db.getCarInfoList(make="Chevrolet")
 	db.close()
 
 
