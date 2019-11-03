@@ -417,7 +417,9 @@ class Database(object):
 		c = self.conn.cursor()
 
 		#query string to select all attributes of the car
-		query = "SELECT * FROM vehicles join registrations using (vin) WHERE "
+		query = "SELECT v.make, v.model, v.year, v.color, v.vin, r.plate, r.regdate, r.expiry, r.fname, r.lname\
+				FROM vehicles v, registrations r\
+				WHERE r.vin=v.vin and "
 
 		values = []
 		valuesList = []
@@ -445,7 +447,10 @@ class Database(object):
 			return
 
 		#joining queries and where clauses with a group by key clause
-		fullQuery = query + queryString + " GROUP BY VIN"
+		fullQuery = query + queryString +\
+			" GROUP BY v.make, v.model, v.year, v.color, v.vin, r.plate, r.regdate, r.expiry, r.fname, r.lname\
+			HAVING date(r.expiry) = (select max(date(r1.expiry)) from registrations r1 where r1.vin=r.vin)"
+		print fullQuery
 		#executing the query
 		c.execute(fullQuery, tuple(valuesList))
       	

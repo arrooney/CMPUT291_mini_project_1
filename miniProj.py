@@ -344,8 +344,7 @@ def findCarOwner():
 					print key + ":" + str(cars[i][key]),
    
     
-	#nonNullInput("Please enter the ")
-    time.sleep(30)
+	raw_input("\nPress any key to continue...\n")
     
 
 
