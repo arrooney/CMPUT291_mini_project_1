@@ -417,24 +417,24 @@ class Database(object):
 		c = self.conn.cursor()
 
 		#query string to select all attributes of the car
-		query = "SELECT * FROM vehicles left outer join registrations using (vin) WHERE "
+		query = "SELECT * FROM vehicles join registrations using (vin) WHERE "
 
 		values = []
 		valuesList = []
 		if make != None:
-			values.append("make=?")
+			values.append("make=? COLLATE NOCASE")
 			valuesList.append(make)
 		if model != None:
-			values.append("model=?")
+			values.append("model=? COLLATE NOCASE")
 			valuesList.append(model)
 		if year != None:
 			values.append("year=?")
 			valuesList.append(year)
 		if color != None:
-			values.append("color=?")
+			values.append("color=? COLLATE NOCASE")
 			valuesList.append(color)
 		if plate != None:
-			values.append("plate=?")
+			values.append("plate=? COLLATE NOCASE")
 			valuesList.append(plate)
 		separator = " and "
 	  	queryString = separator.join(values)
@@ -445,8 +445,8 @@ class Database(object):
 			return
 
 		#joining queries and where clauses with a group by key clause
-		fullQuery = query + queryString + "GROUP BY VIN"
-		
+		fullQuery = query + queryString + " GROUP BY VIN"
+		print fullQuery
 		#executing the query
 		c.execute(fullQuery, tuple(valuesList))
       	
@@ -463,7 +463,7 @@ def main():
 	print db.getVehicleRegByVIN("U508")
 	#print db.getVehicleReg(300)
 	#print db.getAmountPaid(400)
-	#db.getCarInfoList(make="Chevrolet")
+	db.getCarInfoList(make="Chevrolet", color="red")
 	db.close()
 
 
