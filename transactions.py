@@ -446,7 +446,6 @@ class Database(object):
 
 		#joining queries and where clauses with a group by key clause
 		fullQuery = query + queryString + " GROUP BY VIN"
-		print fullQuery
 		#executing the query
 		c.execute(fullQuery, tuple(valuesList))
       	
