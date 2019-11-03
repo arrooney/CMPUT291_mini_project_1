@@ -176,26 +176,25 @@ def registerBirth():
 
 def getDriverAbstract():
 	prettyPrint("Get a driver's abstract")
-	fname = raw_input ("Enter the driver's first name: ")
-	lname = raw_input ("Enter the driver's last name: ")
+	fname = nonNullInput("Enter the driver's first name: ")
+	lname = nonNullInput("Enter the driver's last name: ")
 	person = db.getPersonInfo(fname, lname)
 	while not person:
 		print "Person not found..."
-		fname = raw_input ("Enter the driver's first name: ")
-		lname = raw_input ("Enter the driver's last name: ")
+		fname = nonNullInput ("Enter the driver's first name: ")
+		lname = nonNullInput ("Enter the driver's last name: ")
 		person = db.getPersonInfo(fname, lname)
 	print "Number of tickets obtained in total:", (db.getTicketTotal(fname, lname))
 	print "Number of tickets obtained in the last 2 years:", (db.getTicketTotalLast2(fname, lname))
-	print "Number of demerits obtained in total:", (db.getDemeritCount(fname, lname))
-	print "Number of demerits obtained in the last 2 years:", (db.getDemeritCountLast2(fname, lname))
+	print "Number of demerit notices in total:", (db.getDemeritCount(fname, lname))
+	print "Number of demerit notices in the last 2 years:", (db.getDemeritCountLast2(fname, lname))
 	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
 	tickNum = 1
 	viewChoice = raw_input("Would you like to view the tickets ordered by date? (y/n)")
 	while True:
 		if viewChoice == 'n':
-			tickets = db.getTicketInfo(fname, lname)
-			break
+			return
 		elif viewChoice == 'y':
 			tickets = db.getTicketInfoOrdered(fname, lname)
 			break
@@ -207,6 +206,7 @@ def getDriverAbstract():
 		sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
 		clear()
 		for tickets in sub_list:
+			clear()
 			for ticket in tickets:
 				print ("")
 				print "Info for ticket", tickNum
@@ -214,7 +214,7 @@ def getDriverAbstract():
 				for k, v in ticket.iteritems():
 					print k, ":", v, ',',
 			print ("")
-			raw_input("Press enter to see 5 more"),
+			raw_input("Press enter to continue..."),
 
 
 def registerMarriage():
@@ -297,16 +297,19 @@ def renewRegistration():
 
 def processPayment():
 	prettyPrint("Process a payment")
-	tno = raw_input("Ticket Number: ")
+	tno = integerInput("Ticket Number: ")
 	ticket = db.getTicketNumber(tno)
 	while not ticket:
 		print "Ticket Number not found..."
-		tno = raw_input("Ticket Number: ")
+		tno = integerInput("Ticket Number: ")
 		ticket = db.getTicketNumber(tno)
-	payment = numericInputRadix("Please enter the amount to be paid: ")
+	payment = integerInput("Please enter the amount to be paid: ")
+	if int(db.getFineAmount(tno)) - int(db.getAmountPaid(tno)) == 0:
+		prettyPrint("Rejected. This fine has $0 owing!", 1)
+		return
 	while int(payment) + db.getAmountPaid(tno) > db.getFineAmount(tno):
 		print "You have paid more than the fine amount, please try again"
-		payment = raw_input("Please enter the amount to be paid: ")
+		payment = integerInput("Please enter the amount to be paid: ")
 	db.processPayment(tno, date.today(), payment)
 
 
@@ -321,7 +324,7 @@ def findCarOwner():
     color_car = maybeNullInput("Enter the color of the Car: ")
     plate_car = maybeNullInput("Enter the plate of the Car: ")
     if make_car == None and model_car == None and year_car == None and color_car == None and plate_car == None:
-    		prettyPrint("No information provided", 0.5)
+    		prettyPrint("No information provided", 1)
     		return
     #calling function to get the result from the query
     cars = db.getCarInfoList(make_car, model_car, year_car, color_car, plate_car)
