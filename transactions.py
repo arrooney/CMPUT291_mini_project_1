@@ -95,6 +95,7 @@ class Database(object):
 		return True
 	
 
+	""" Make an entry to the marriage table """
 	def registerMarriage(self, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -120,6 +121,8 @@ class Database(object):
 		return True
 
 
+
+	""" Get info for a given marriage """
 	def getMarriageInfo(self, p1_fname, p1_lname, p2_fname, p2_lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -228,6 +231,7 @@ class Database(object):
 		return True
 	
 
+	""" Make an entry to the tickets table """
 	def processPayment(self, tno, pdate, amount):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -239,6 +243,7 @@ class Database(object):
 		return True 
 	
 
+	""" get ticket info for a given ticket no. """
 	def getTicketNumber(self, tno):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -251,6 +256,7 @@ class Database(object):
 			return result
 
 
+	""" Get ctital count of tickets """
 	def getTicketTotal(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -266,6 +272,7 @@ class Database(object):
 		return int(result[0]['numTickets'])
 
 
+	""" Get count of tickets from the last two years """
 	def getTicketTotalLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -282,6 +289,7 @@ class Database(object):
 		return int(result[0]['numTickets'])
 
 	
+	""" Get unordered ticket info for a given person """
 	def getTicketInfo(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -296,6 +304,8 @@ class Database(object):
 		else:
 			return result
 
+
+	""" Get the info for the tickets issued to a given person, ordered by date  """
 	def getTicketInfoOrdered(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -311,6 +321,8 @@ class Database(object):
 		else:
 			return result
 
+
+	""" Add a new entry to the ticket table """
 	def issueTicket(self, regno, fine, violation, vdate):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -329,6 +341,7 @@ class Database(object):
 		return True
 
 
+	""" Get the total number of demerit notices for a person """
 	def getDemeritCount(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -343,6 +356,8 @@ class Database(object):
 			return 0
 		return int(result[0]['allNotices'])
 
+
+	""" Get the number of demerit notices for a person from the last two years """
 	def getDemeritCountLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -359,6 +374,7 @@ class Database(object):
 		return int(result[0]['allNotices'])
 
 
+	""" Get the total number of demerit poits for a given driver """
 	def getDemeritPoints(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -373,6 +389,7 @@ class Database(object):
 		return int(result[0]['totalPoints'])
 
 
+	""" Get the number of demerit points for a given person from the last two years. """
 	def getDemeritPointsLast2(self, fname, lname):
 		self.checkConn()
 		c = self.conn.cursor()
@@ -412,6 +429,9 @@ class Database(object):
 		return int(result[0]['fine'])
 
 	
+	""" Given one or more of make, model, year, colour, or plate, this funciton returns regristration
+	 joined with vehicles for the most recent owner of the vehicle. Vehicles with no registrations are not
+	 Included. """
 	def getCarInfoList(self, make = None, model = None, year = None, color = None, plate = None):
 		self.checkConn()
 		c = self.conn.cursor()
