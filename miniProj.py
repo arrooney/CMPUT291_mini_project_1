@@ -360,7 +360,7 @@ def findCarOwner():
             
             print "\n\n[" + str(i+1) + "]"
             for key in cars[i]:
-                if key == 'make' or key == 'model' or key == 'year' or key == 'color':
+                if key == 'make' or key == 'model' or key == 'year' or key == 'color' or key == 'plate':
 					print key + ":" + str(cars[i][key]),
 	#taking the users input choice when
 	#there are more than four cars returned from the query
