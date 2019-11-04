@@ -343,9 +343,10 @@ def findCarOwner():
         print "\nThe owners information are as follows: \n"
         for i in range(length_results):
 			#printing the owners information along with the car information for the cars
+			print "\n\n[" + str(i) + "]"
 			for key in cars[i]:
 				if key == 'make' or key == 'model' or key == 'year' or key == 'color'\
-					or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname':
+					or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname' or key == 'plate':
 					
 					print key + ":" + str(cars[i][key]),
 		# that is all the information required... 
@@ -357,7 +358,7 @@ def findCarOwner():
 	    #if the results returned from the query are more than four
         for i in range(length_results):
             
-            print "\n\nCar Number: " + str(i+1)
+            print "\n\n[" + str(i+1) + "]"
             for key in cars[i]:
                 if key == 'make' or key == 'model' or key == 'year' or key == 'color':
 					print key + ":" + str(cars[i][key]),
@@ -375,7 +376,7 @@ def findCarOwner():
 	print "\nThe owners information for Car Number " + car_choice + " is: \n"
 	for key in cars[int(car_choice)-1]:
 		if key == 'make' or key == 'model' or key == 'year' or key == 'color'\
-			or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname':
+			or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname' or key == 'plate':
 			print key + ":" + str(cars[int(car_choice)-1][key]),
 
 	#back to the officer menu
