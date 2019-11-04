@@ -214,7 +214,7 @@ def getDriverAbstract():
 				for k, v in ticket.iteritems():
 					print k, ":", v, ',',
 			print ("")
-			raw_input("Press enter to continue..."),
+			raw_input("Press any key to continue..."),
 
 
 def registerMarriage():
@@ -346,41 +346,36 @@ def findCarOwner():
 					or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname':
 					
 					print key + ":" + str(cars[i][key]),
-    
-    #printing the results found on screen
-    #if the results returned from the query are more than four
-    if length_results >= 4:
+		# that is all the information required... 
+		# back to the officer menu
+    	raw_input("\n\nPress any key to continue...")
+    	return
+    else:
+	    #printing the results found on screen
+	    #if the results returned from the query are more than four
         for i in range(length_results):
             
             print "\n\nCar Number: " + str(i+1)
-            
             for key in cars[i]:
-                
                 if key == 'make' or key == 'model' or key == 'year' or key == 'color':
 					print key + ":" + str(cars[i][key]),
 	
-	if length_results >= 4:
-		#taking the users input choice when
-		#there are more than four cars returned from the query
-		choice_prompt = "Please choose the car you are searching for from the above list: "
-		car_choice = nonNullInput("\n\n" + choice_prompt)
-		
-		#checking if input is numeric or not
-		while car_choice.isdigit() == False:
-			print "Please provide a valid input\n"
-			car_choice = nonNullInput(choice_prompt)
-		
-		#checking if input is within range of the choices given to the user
-		while int(car_choice) < 1 or int(car_choice) > length_results:
-			print "Input is not within range of the list provided.\nPlease provide a valid input\n"
-			car_choice = nonNullInput(choice_prompt)
-		
-		#printing the owners information along with the car information for the single car
-		print "\nThe owners information for Car Number " + car_choice + " is: \n"
-		for key in cars[int(car_choice)-1]:
-			if key == 'make' or key == 'model' or key == 'year' or key == 'color'\
-				or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname':
-				print key + ":" + str(cars[int(car_choice)-1][key]),
+	#taking the users input choice when
+	#there are more than four cars returned from the query
+	choice_prompt = "Please choose the car you are searching for from the above list: "
+	car_choice = integerInput("\n\n" + choice_prompt)
+	
+	#checking if input is within range of the choices given to the user
+	while int(car_choice) < 1 or int(car_choice) > length_results:
+		print "Input is not within range of the list provided.\nPlease provide a valid input\n"
+		car_choice = nonNullInput(choice_prompt)
+	
+	#printing the owners information along with the car information for the single car
+	print "\nThe owners information for Car Number " + car_choice + " is: \n"
+	for key in cars[int(car_choice)-1]:
+		if key == 'make' or key == 'model' or key == 'year' or key == 'color'\
+			or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname':
+			print key + ":" + str(cars[int(car_choice)-1][key]),
 
 	#back to the officer menu
     raw_input("\n\nPress any key to continue...")
