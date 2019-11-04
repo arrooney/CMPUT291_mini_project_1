@@ -451,7 +451,7 @@ class Database(object):
 		#joining queries and where clauses with a group by key clause
 		fullQuery = query + queryString +\
 			" GROUP BY v.make, v.model, v.year, v.color, v.vin, r.plate, r.regdate, r.expiry, r.fname, r.lname\
-			HAVING date(r.expiry) = (select max(date(r1.expiry)) from registrations r1 where r1.vin=r.vin)"
+			HAVING date(r.regdate) = (select max(date(r1.regdate)) from registrations r1 where r1.vin=r.vin)"
 		
 		#executing the query
 		c.execute(fullQuery, tuple(valuesList))

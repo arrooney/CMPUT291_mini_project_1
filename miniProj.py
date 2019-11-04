@@ -334,11 +334,13 @@ def findCarOwner():
     #getting the length of the list i.e all the results
     length_results = len(cars)
     #print length_results
-    
+    if length_results == 0:
+    	prettyPrint("No matches...", 1)
+    	return
     #if the results returned from the query are less than four
     if length_results < 4:
         
-        print "\nThe owners information are as follows : \n"
+        print "\nThe owners information are as follows: \n"
         for i in range(length_results):
 			#printing the owners information along with the car information for the cars
 			for key in cars[i]:
@@ -359,7 +361,6 @@ def findCarOwner():
             for key in cars[i]:
                 if key == 'make' or key == 'model' or key == 'year' or key == 'color':
 					print key + ":" + str(cars[i][key]),
-	
 	#taking the users input choice when
 	#there are more than four cars returned from the query
 	choice_prompt = "Please choose the car you are searching for from the above list: "
