@@ -184,6 +184,7 @@ def getDriverAbstract():
 		fname = nonNullInput ("Enter the driver's first name: ")
 		lname = nonNullInput ("Enter the driver's last name: ")
 		person = db.getPersonInfo(fname, lname)
+	#print all attributes for the last 2 years and lifetime
 	print "Number of tickets obtained in total:", (db.getTicketTotal(fname, lname))
 	print "Number of tickets obtained in the last 2 years:", (db.getTicketTotalLast2(fname, lname))
 	print "Number of demerit notices in total:", (db.getDemeritCount(fname, lname))
@@ -191,6 +192,7 @@ def getDriverAbstract():
 	print "Number of demerit points obtained in total:", (db.getDemeritPoints(fname, lname))
 	print "Number of demerit points obtained in the last 2 years:", (db.getDemeritPointsLast2(fname, lname))
 	tickNum = 1
+	#give the user a choice to view the tickets
 	viewChoice = raw_input("Would you like to view the tickets ordered by date? (y/n)")
 	while True:
 		if viewChoice == 'n':
@@ -202,6 +204,7 @@ def getDriverAbstract():
 			viewChoice = raw_input("Please enter y or n!")
 	if not db.getTicketInfo(fname, lname):
 		print "No tickets were found!"
+	#split tickets into sublists of 5, and loop through a sublist whenever the user selects to see more.
 	else:
 		sub_list = [tickets[x:x+5] for x in xrange(0, len(tickets), 5)]
 		clear()
@@ -304,9 +307,11 @@ def processPayment():
 		tno = integerInput("Ticket Number: ")
 		ticket = db.getTicketNumber(tno)
 	payment = integerInput("Please enter the amount to be paid: ")
+	#reject the input if there is no more money owed
 	if int(db.getFineAmount(tno)) - int(db.getAmountPaid(tno)) == 0:
 		prettyPrint("Rejected. This fine has $0 owing!", 1)
 		return
+	#reject the input if the current payment and the amount already paid exceeds the total fine amount
 	while int(payment) + db.getAmountPaid(tno) > db.getFineAmount(tno):
 		print "You have paid more than the fine amount, please try again"
 		payment = integerInput("Please enter the amount to be paid: ")
