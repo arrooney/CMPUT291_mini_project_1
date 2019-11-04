@@ -2,12 +2,13 @@ CMPUT 291 - Mini Project 1
 Fall 2019
 
 --	Submission Files	--
-README 			- submission info
+README.txt		- submission info
 start 			- bash shell to run the application
 miniProj.py		- main application logic
 transactions.py		- database transactions
-miniProjReport.pdf	- design report for submission
+Report.pdf		- design report for submission
 prj-tables.sql		- create tables from eClass
+
 --	Group Members	--
 Andrew R. Rooney 	- 1496508
 Mustafa Khairullah 	- 1556314
