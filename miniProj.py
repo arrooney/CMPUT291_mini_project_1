@@ -323,29 +323,67 @@ def findCarOwner():
     year_car = maybeNullInput("Enter the year of the Car: ")
     color_car = maybeNullInput("Enter the color of the Car: ")
     plate_car = maybeNullInput("Enter the plate of the Car: ")
+    
+    #checking for all NULL parameters
     if make_car == None and model_car == None and year_car == None and color_car == None and plate_car == None:
-    		prettyPrint("No information provided", 1)
+    		prettyPrint("No information provided....", 1)
     		return
     #calling function to get the result from the query
     cars = db.getCarInfoList(make_car, model_car, year_car, color_car, plate_car)
     
     #getting the length of the list i.e all the results
     length_results = len(cars)
+    #print length_results
+    
+    #if the results returned from the query are less than four
+    if length_results < 4:
+        
+        print "\nThe owners information are as follows : \n"
+        for i in range(length_results):
+			#printing the owners information along with the car information for the cars
+			for key in cars[i]:
+				if key == 'make' or key == 'model' or key == 'year' or key == 'color'\
+					or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname':
+					
+					print key + ":" + str(cars[i][key]),
     
     #printing the results found on screen
+    #if the results returned from the query are more than four
     if length_results >= 4:
         for i in range(length_results):
             
-            print "\n\nCar Number " + str(i+1) + "\n"
+            print "\n\nCar Number: " + str(i+1)
             
             for key in cars[i]:
                 
-                if key == 'make' or key == 'model' or key == 'year' or key == 'color' or key == 'vin':
+                if key == 'make' or key == 'model' or key == 'year' or key == 'color':
 					print key + ":" + str(cars[i][key]),
-   
-    
-	raw_input("\nPress any key to continue...\n")
-    
+	
+	if length_results >= 4:
+		#taking the users input choice when
+		#there are more than four cars returned from the query
+		choice_prompt = "Please choose the car you are searching for from the above list: "
+		car_choice = nonNullInput("\n\n" + choice_prompt)
+		
+		#checking if input is numeric or not
+		while car_choice.isdigit() == False:
+			print "Please provide a valid input\n"
+			car_choice = nonNullInput(choice_prompt)
+		
+		#checking if input is within range of the choices given to the user
+		while int(car_choice) < 1 or int(car_choice) > length_results:
+			print "Input is not within range of the list provided.\nPlease provide a valid input\n"
+			car_choice = nonNullInput(choice_prompt)
+		
+		#printing the owners information along with the car information for the single car
+		print "\nThe owners information for Car Number " + car_choice + " is: \n"
+		for key in cars[int(car_choice)-1]:
+			if key == 'make' or key == 'model' or key == 'year' or key == 'color'\
+				or key == 'regdate' or key == 'expiry' or key == 'fname' or key == 'lname':
+				print key + ":" + str(cars[int(car_choice)-1][key]),
+
+	#back to the officer menu
+    raw_input("\n\nPress any key to continue...")
 
 
 def getDate(prompt):
@@ -391,7 +429,7 @@ def nonNullInput(prompt):
 	inp = raw_input(prompt)
 
 	while inp == "":
-		print "Please provide input"
+		print "Please provide a valid input"
 		inp = raw_input(prompt)
 	return inp
 

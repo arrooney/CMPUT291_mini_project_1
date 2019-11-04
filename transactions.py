@@ -20,7 +20,7 @@ class Database(object):
 
 
 	def __dictionary_factory__(self, cursor, row):
-		# From lab notes - credit goes to TA's
+    		# From lab notes - credit goes to TA's
 		dict = {}
 		for i, col in enumerate(cursor.description):
 			dict[col[0]] = row[i]
@@ -423,6 +423,8 @@ class Database(object):
 
 		values = []
 		valuesList = []
+
+		#user selected attributes to search for the owner
 		if make != None:
 			values.append("make=? COLLATE NOCASE")
 			valuesList.append(make)
@@ -450,7 +452,7 @@ class Database(object):
 		fullQuery = query + queryString +\
 			" GROUP BY v.make, v.model, v.year, v.color, v.vin, r.plate, r.regdate, r.expiry, r.fname, r.lname\
 			HAVING date(r.expiry) = (select max(date(r1.expiry)) from registrations r1 where r1.vin=r.vin)"
-		print fullQuery
+		
 		#executing the query
 		c.execute(fullQuery, tuple(valuesList))
       	
